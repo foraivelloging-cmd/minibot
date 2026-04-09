@@ -44,7 +44,8 @@ function getQuotedMessage(rawMessage) {
 }
 
 function extractViewOnceTarget(rawMessage) {
-  const quoted = getQuotedMessage(rawMessage);
+  const extended = rawMessage?.message?.extendedTextMessage;
+  const quoted = getQuotedMessage(rawMessage) || extended?.contextInfo?.quotedMessage;
   const candidates = [quoted, rawMessage?.message];
 
   for (const candidate of candidates) {
