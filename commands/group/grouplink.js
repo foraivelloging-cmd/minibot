@@ -1,0 +1,2 @@
+module.exports={name:'grouplink',aliases:['linkgc'],category:'group',description:'Get invite link',usage:'.grouplink',groupOnly:true,adminOnly:true,botAdminNeeded:true,async execute(sock,msg,args,extra){try{const code=await sock.groupInviteCode(extra.from);await extra.reply(`🔗 Group Link:
+https://chat.whatsapp.com/${code}`);}catch(e){await extra.reply(`❌ ${e.message}`);}}};

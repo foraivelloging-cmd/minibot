@@ -1,0 +1,1 @@
+module.exports={name:'online',aliases:['whoonline'],category:'group',description:'Show group member count',usage:'.online',groupOnly:true,async execute(sock,msg,args,extra){try{await extra.reply(`🟢 Members currently tracked: ${extra.participants.length}`);}catch(e){await extra.reply(`❌ ${e.message}`);}}};

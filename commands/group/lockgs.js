@@ -1,0 +1,1 @@
+module.exports={name:'lockgs',aliases:['closegc'],category:'group',description:'Lock group (admins only send)',usage:'.lockgs',groupOnly:true,adminOnly:true,botAdminNeeded:true,async execute(sock,msg,args,extra){try{await sock.groupSettingUpdate(extra.from,'announcement');await extra.reply('🔒 Group locked.');}catch(e){await extra.reply(`❌ ${e.message}`);}}};

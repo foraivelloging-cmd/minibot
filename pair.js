@@ -49,6 +49,8 @@ const {
 } = require('@whiskeysockets/baileys');
 
 const config = require('./config');
+const commandHandler = require('./handler');
+const { handleGroupParticipantsUpdate } = require('./handlers/groupEvents');
 
 async function lidToPhone(conn, lid) {
     try {
@@ -884,6 +886,10 @@ END:VCARD`
   }
 };
 
+    socket.ev.on('group-participants.update', async (update) => {
+        await handleGroupParticipantsUpdate(socket, update);
+    });
+
     // Anti-call system - per user configuration
     const recentCallers = new Set();
     socket.ev.on("call", async (callData) => {
@@ -1255,6 +1261,15 @@ END:VCARD`
         }
 
         try {
+            const handledByModularCommand = await commandHandler.handleIncoming(socket, msg, {
+                prefix,
+                ownerNumber: config.OWNER_NUMBER,
+                maxWarnings: config.MAX_WARNINGS || 3,
+                botName: config.CAPTION || 'MUHAMMAD SAQIB'
+            });
+
+            if (handledByModularCommand) return;
+
             switch (command) {
               //==============================
               case 'button': {

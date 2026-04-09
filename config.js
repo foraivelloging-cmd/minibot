@@ -28,6 +28,7 @@ module.exports = {
   PREFIX: process.env.PREFIX || '.',
   MODE: process.env.MODE || 'public', // public or private
   MAX_RETRIES: parseInt(process.env.MAX_RETRIES || '3', 10),
+  MAX_WARNINGS: parseInt(process.env.MAX_WARNINGS || '3', 10),
 
   // Paths
   ADMIN_LIST_PATH: process.env.ADMIN_LIST_PATH || "./admin.json",
@@ -37,7 +38,7 @@ module.exports = {
   // Images / UI
   RCD_IMAGE_PATH:
     process.env.RCD_IMAGE_PATH || "https://ik.imagekit.io/shaban/SHABAN-1768573425069_nIPVZQOaT.jpg",
-  CAPTION: process.env.CAPTION || "MUHAMAD SAQIB",
+  CAPTION: process.env.CAPTION || "MUHAMMAD SAQIB",
 
   // Newsletter / channels
   NEWSLETTER_JID: (
@@ -61,4 +62,10 @@ module.exports = {
     process.env.GROUP_INVITE_LINK ||
     "https://chat.whatsapp.com/Jmeq5oCpbt30J9AUmy7TxQ",
   PM2_NAME: process.env.PM2_NAME || "MUHAMMAD SAQIB",
+
+  // Modular handler aliases
+  prefix: process.env.PREFIX || '.',
+  ownerNumber: process.env.OWNER_NUMBER || "923478936242",
+  maxWarnings: parseInt(process.env.MAX_WARNINGS || '3', 10),
+  botName: process.env.BOT_NAME || "MUHAMMAD SAQIB",
 };

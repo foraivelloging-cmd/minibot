@@ -1,0 +1,1 @@
+module.exports={name:'unlockgs',aliases:['opengc'],category:'group',description:'Unlock group',usage:'.unlockgs',groupOnly:true,adminOnly:true,botAdminNeeded:true,async execute(sock,msg,args,extra){try{await sock.groupSettingUpdate(extra.from,'not_announcement');await extra.reply('🔓 Group unlocked.');}catch(e){await extra.reply(`❌ ${e.message}`);}}};

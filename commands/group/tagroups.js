@@ -1,0 +1,3 @@
+module.exports={name:'tagroups',aliases:['groups'],category:'group',description:'Tag/list all joined groups',usage:'.tagroups',ownerOnly:true,async execute(sock,msg,args,extra){try{const groups=await sock.groupFetchAllParticipating();const ids=Object.keys(groups||{});if(!ids.length)return extra.reply('ℹ️ No groups found.');const lines=ids.slice(0,50).map((id,i)=>`${i+1}. ${groups[id].subject}`);await extra.reply(`📚 *Joined Groups*
+
+${lines.join('\n')}`);}catch(e){await extra.reply(`❌ ${e.message}`);}}};
