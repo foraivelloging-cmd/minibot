@@ -36,21 +36,21 @@ module.exports = {
 
   // Images / UI
   RCD_IMAGE_PATH:
-    process.env.RCD_IMAGE_PATH || "https://bandaheali-cdn.koyeb.app/bandaheali/profile.jpg",
-  CAPTION: process.env.CAPTION || "BANDAHEALI-MINI",
+    process.env.RCD_IMAGE_PATH || "https://ik.imagekit.io/shaban/SHABAN-1768573425069_nIPVZQOaT.jpg",
+  CAPTION: process.env.CAPTION || "MUHAMAD SAQIB",
 
   // Newsletter / channels
   NEWSLETTER_JID: (
-    process.env.NEWSLETTER_JID || "120363315182578784@newsletter"
+    process.env.NEWSLETTER_JID || "120363407057906982@newsletter"
   ).trim(),
   CHANNEL_LINK:
     process.env.CHANNEL_LINK ||
-    "https://whatsapp.com/channel/0029VajGHyh2phHOH5zJl73P",
+    "https://whatsapp.com/channel/0029Vb7JTSFInlqPgKrPDP2O",
 
   // OTP & owner
   OTP_EXPIRY: parseInt(process.env.OTP_EXPIRY || "300000", 10), // ms
-  OWNER_NUMBER: process.env.OWNER_NUMBER || "923253617422",
-  DEV: process.env.DEV || '923253617422',
+  OWNER_NUMBER: process.env.OWNER_NUMBER || "923478936242",
+  DEV: process.env.DEV || '923478936242',
 
   // Telegram Bot Configuration
   TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN || "",
@@ -59,6 +59,6 @@ module.exports = {
   // Misc
   GROUP_INVITE_LINK:
     process.env.GROUP_INVITE_LINK ||
-    "https://chat.whatsapp.com/Eg1xSqB63jn8FuyWqFnc5S",
-  PM2_NAME: process.env.PM2_NAME || "Bandaheali",
+    "https://chat.whatsapp.com/Jmeq5oCpbt30J9AUmy7TxQ",
+  PM2_NAME: process.env.PM2_NAME || "MUHAMMAD SAQIB",
 };
