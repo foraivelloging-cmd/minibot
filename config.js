@@ -37,7 +37,7 @@ module.exports = {
   // Images / UI
   RCD_IMAGE_PATH:
     process.env.RCD_IMAGE_PATH || "https://ik.imagekit.io/shaban/SHABAN-1768573425069_nIPVZQOaT.jpg",
-  CAPTION: process.env.CAPTION || "MUHAMAD SAQIB",
+  CAPTION: process.env.CAPTION || "MUHAMMAD SAQIB",
 
   // Newsletter / channels
   NEWSLETTER_JID: (
