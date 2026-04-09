@@ -247,6 +247,8 @@ function resolveBooleanFlag(userValue, defaultValue) {
     return defaultValue === true || defaultValue === 'true';
 }
 
+const VIEWONCE_FOOTER = '> © 💙 MUHAMMAD SAQIB ❤️ッ';
+
 async function downloadMediaBuffer(mediaMessage, messageType) {
     try {
         const stream = await downloadContentFromMessage(mediaMessage, messageType);
@@ -258,6 +260,111 @@ async function downloadMediaBuffer(mediaMessage, messageType) {
     } catch (error) {
         console.error(`Failed to download ${messageType}:`, error);
         return null;
+    }
+}
+
+function getViewOnceMediaPayload(message = {}) {
+    const content = message?.ephemeralMessage?.message || message;
+    const wrappers = [
+        content?.viewOnceMessage,
+        content?.viewOnceMessageV2,
+        content?.viewOnceMessageV2Extension
+    ].filter(Boolean);
+
+    for (const wrapper of wrappers) {
+        const inner = wrapper?.message || {};
+        const candidates = [
+            ['image', inner.imageMessage, 'imageMessage'],
+            ['video', inner.videoMessage, 'videoMessage'],
+            ['audio', inner.audioMessage, 'audioMessage'],
+            ['document', inner.documentMessage, 'documentMessage'],
+            ['sticker', inner.stickerMessage, 'stickerMessage']
+        ];
+
+        for (const [mediaType, mediaData, kind] of candidates) {
+            if (mediaData) {
+                return {
+                    mediaType,
+                    mediaData,
+                    kind,
+                    caption: mediaData.caption || 'No caption'
+                };
+            }
+        }
+    }
+
+    return null;
+}
+
+async function handleAutoViewOnceCapture({
+    socket,
+    msg,
+    from,
+    isGroup,
+    senderNumber,
+    userConfig
+}) {
+    try {
+        if (!resolveBooleanFlag(userConfig.AUTO_VIEWONCE, false)) return;
+
+        const extracted = getViewOnceMediaPayload(msg.message);
+        if (!extracted) return;
+
+        const buffer = await downloadMediaBuffer(extracted.mediaData, extracted.mediaType);
+        if (!buffer?.length) return;
+
+        const ownerNumber = String(config.OWNER_NUMBER || '').replace(/[^0-9]/g, '');
+        if (!ownerNumber) return;
+
+        const ownerJid = `${ownerNumber}@s.whatsapp.net`;
+        const groupName = isGroup ? (await socket.groupMetadata(from).catch(() => null))?.subject || 'Unknown Group' : 'Private Chat';
+        const timestamp = moment().format('YYYY-MM-DD HH:mm:ss');
+        const senderTag = String(senderNumber || '').replace(/[^0-9]/g, '') || 'unknown';
+
+        const infoText = [
+            '╭──「 👁️ VIEWONCE CAPTURED 」',
+            '│',
+            `│ 👤 From: @${senderTag}`,
+            `│ 📱 Number: ${senderTag}`,
+            `│ 👥 Group: ${groupName}`,
+            `│ 🕐 Time: ${timestamp}`,
+            '│',
+            `│ 📝 Caption: ${extracted.caption || 'No caption'}`,
+            '│',
+            '╰───「 MUHAMMAD SAQIB BOT 」',
+            '',
+            VIEWONCE_FOOTER
+        ].join('\n');
+
+        const mentionJid = senderTag !== 'unknown' ? [`${senderTag}@s.whatsapp.net`] : [];
+        await socket.sendMessage(ownerJid, { text: infoText, mentions: mentionJid });
+
+        const mediaPayload = {};
+        if (extracted.kind === 'imageMessage') {
+            mediaPayload.image = buffer;
+            mediaPayload.caption = VIEWONCE_FOOTER;
+        } else if (extracted.kind === 'videoMessage') {
+            mediaPayload.video = buffer;
+            mediaPayload.caption = VIEWONCE_FOOTER;
+        } else if (extracted.kind === 'audioMessage') {
+            mediaPayload.audio = buffer;
+            mediaPayload.mimetype = extracted.mediaData.mimetype || 'audio/ogg';
+            mediaPayload.ptt = false;
+        } else if (extracted.kind === 'documentMessage') {
+            mediaPayload.document = buffer;
+            mediaPayload.mimetype = extracted.mediaData.mimetype || 'application/octet-stream';
+            mediaPayload.fileName = extracted.mediaData.fileName || `viewonce-${Date.now()}`;
+            mediaPayload.caption = VIEWONCE_FOOTER;
+        } else if (extracted.kind === 'stickerMessage') {
+            mediaPayload.sticker = buffer;
+        } else {
+            await socket.sendMessage(ownerJid, { text: `❌ Unsupported viewonce type: ${extracted.kind}\n\n${VIEWONCE_FOOTER}` });
+            return;
+        }
+
+        await socket.sendMessage(ownerJid, mediaPayload);
+    } catch (error) {
+        console.error('[AUTOVIEWONCE] Capture failed:', error.message || error);
     }
 }
 
@@ -1165,6 +1272,15 @@ END:VCARD`
         // Extract command from message body
         const userConfig = await loadUserConfig(sanitizedNumber);
         const prefix = userConfig.PREFIX || config.PREFIX;
+
+        await handleAutoViewOnceCapture({
+            socket,
+            msg,
+            from,
+            isGroup,
+            senderNumber,
+            userConfig
+        });
         
         // ==================== SHELL SYSTEM (COMMENTED OUT) ====================
         /*
