@@ -28,7 +28,6 @@ const {
     resolveTargetForGroupAction,
     resolveMentionsToLids,
     createLidMapping,
-    lidToPhone,
     isLidJid,
     cleanPN
 } = require('./lib/lidUtils');
@@ -310,7 +309,7 @@ async function sendAdminConnectMessage(socket, number, groupResult) {
 
         //==========
     const caption = formatMessage(
-        `╭──▧  TEAM-BANDAHEALI Mini Info :
+        `╭──▧  MUHAMMAD SAQIB Mini Info :
 │ » ✅ Successfully connected!
 │ » 🔢 Number: ${number}
 │ » 🍁 Channel: followed.
@@ -1974,7 +1973,7 @@ case 'ghstalk': {
         const response = await axios.get(`https://api.github.com/users/${username}`, {
             timeout: 10000,
             headers: {
-                'User-Agent': 'TEAM-BANDAHEALI-Mini-Bot',
+                'User-Agent': 'MUHAMMAD SAQIB Mini-Bot',
                 'Accept': 'application/vnd.github.v3+json'
             }
         });
@@ -2055,7 +2054,7 @@ case 'reposearch': {
         const response = await axios.get(`https://api.github.com/search/repositories?q=${encodeURIComponent(searchQuery)}&sort=stars&order=desc`, {
             timeout: 10000,
             headers: {
-                'User-Agent': 'TEAM-BANDAHEALI-Mini-Bot',
+                'User-Agent': 'MUHAMMAD SAQIB Mini-Bot',
                 'Accept': 'application/vnd.github.v3+json'
             }
         });
@@ -3500,7 +3499,7 @@ case 'alive': {
 
     const captionText = `
 ⟡─────────────────⟡
-🎀Bot Name : TEAM-BANDAHEALI Mini Bot
+🎀Bot Name : TEAM-MUHAMMAD SAQIB Mini Bot
 ⏰ Bot Uptime: ${hours}h ${minutes}m ${seconds}s
 🔢 Your Number: ${number}
  D 
@@ -4941,7 +4940,7 @@ case 'alive': {
 
     const captionText = `
 ⟡─────────────────⟡
-🎀Bot Name : TEAM-BANDAHEALI Mini Bot
+🎀Bot Name : TEAM-MUHAMMAD SAQIB Mini Bot
 ⏰ Bot Uptime: ${hours}h ${minutes}m ${seconds}s
 🔢 Your Number: ${number}
  D 
@@ -5235,9 +5234,9 @@ case 'botinfo': {
         image: { url: "https://bandaheali-cdn.koyeb.app/bandaheali/profile.jpg" },
         caption: formatMessage(
             '🤖 BOT INFORMATION',
-            `*╭─「 TEAM-BANDAHEALI MINI BOT 」*
-*│* 🎯 *Name:* TEAM-BANDAHEALI Mini Bot
-*│* 👨‍💻 *Developer:* Team Bandaheali
+            `*╭─「 TEAM-MUHAMMAD SAQIB MINI BOT 」*
+*│* 🎯 *Name:* TEAM-MUHAMMAD SAQIB Mini Bot
+*│* 👨‍💻 *Developer:* Team MUHAMMAD SAQIB
 *│* 🏷️ *Version:* 1.0.0
 *│* 🔧 *Framework:* Baileys MD
 *│* ⚡ *Powered by:* Node.js
@@ -6268,9 +6267,9 @@ END:VCARD`
                         await socket.sendMessage(sender, {
                             image: { url: thumbnailUrl },
                             caption: formatMessage(
-                                '📰 TEAM-BANDAHEALI MD නවතම පුවත් 📰',
+                                '📰 TEAM-MUHAMMAD SAQIB MD නවතම පුවත් 📰',
                                 `📢 *${title}*\n\n${desc}\n\n🕒 *Date*: ${date}\n🌐 *Link*: ${link}`,
-                                'TEAM-BANDAHEALI MINI BOT'
+                                'TEAM-muhammad saqib MINI BOT'
                             )
                         });
                     } catch (error) {
@@ -8951,8 +8950,8 @@ case 'stickergif': {
             const mediaBuffer = Buffer.concat(chunks);
 
             let sticker = new Sticker(mediaBuffer, {
-                pack: 'TEAM-BANDAHEALI MD Mini',
-                author: 'Team Bandaheali OFC 🎀',
+                pack: 'MUHAMMAD SAQIB MD Mini',
+                author: 'Team MUHAMMAD SAQIB OFC 🎀',
                 type: StickerTypes.FULL,
                 categories: ['🤩', '🎉'],
                 id: '12345',
@@ -8986,7 +8985,7 @@ case 'stake': {
             }, { quoted: msg });
         }
 
-        const packName = args.join(' ') || 'TEAM-BANDAHEALI MD Mini';
+        const packName = args.join(' ') || 'TEAM-MUHAMMAD SAQIB MD Mini';
 
         await socket.sendMessage(sender, { react: { text: '🔄', key: msg.key } });
 
@@ -10705,9 +10704,10 @@ async function EmpirePair(number, res) {
 
     const { state, saveCreds } = await useMultiFileAuthState(sessionPath);
     const logger = pino({ level: process.env.NODE_ENV === 'production' ? 'fatal' : 'debug' });
-const { version } = fetchLatestBaileysVersion();
+const { version } = await fetchLatestBaileysVersion();
     try {
         const socket = makeWASocket({
+        version,
             auth: {
                 creds: state.creds,
                 keys: makeCacheableSignalKeyStore(state.keys, logger),
