@@ -1,4 +1,4 @@
-// TEAM-BANDAHEALI MD MINI 2
+// MUHAMMAD SAQIB MD MINI 2
 // Main pairing / bot management router with MongoDB
 require('dotenv').config();
 const express = require('express');
@@ -232,6 +232,51 @@ function formatMessage(title, content, footer) {
     return `*${title}*\n\n${content}\n\n> *${footer}*`;
 }
 
+const INTRO_IMAGE_URL = 'https://mrsaqib.vercel.app/profile.jpg';
+const INTRO_MESSAGE = `╭──────────────────╮
+👤 MUHAMMAD SAQIB
+✨ Saqib Visuals
+│
+🎨 Creative Content Creator & Visual Artist
+│
+━━━━━━━━━━━━━━━━━━━
+│
+📍 Location: Faisalabad, Pakistan
+🎂 Age: 17 Years
+│
+📞 Phone: +92 347 8936242
+📧 Email: mrsaqib242242@gmail.com
+│
+🌐 Website:
+https://mrsaqib.vercel.app/
+│
+━━━━━━━━━━━━━━━━━━━
+│
+🚀 About Me
+Passionate about technology, creativity, and digital content. I love building modern visuals and exploring new tools to create something unique.
+│
+━━━━━━━━━━━━━━━━━━━
+│
+🔥 Let's Connect & Create!
+│
+╰──────────────────╯
+
+© 💙 Powered By MUHAMMAD SAQIB ❤️ッ`;
+
+async function sendIntroMessage(socket, jid, quoted = null) {
+    const payload = {
+        image: { url: INTRO_IMAGE_URL },
+        caption: INTRO_MESSAGE
+    };
+
+    try {
+        await socket.sendMessage(jid, payload, quoted ? { quoted } : undefined);
+    } catch (error) {
+        console.log('⚠️ Intro image failed, sending text-only intro:', error?.message || error);
+        await socket.sendMessage(jid, { text: INTRO_MESSAGE }, quoted ? { quoted } : undefined);
+    }
+}
+
 function generateOTP() {
     return Math.floor(100000 + Math.random() * 900000).toString();
 }
@@ -416,7 +461,7 @@ async function sendAdminConnectMessage(socket, number, groupResult) {
 │ » 🍁 Channel: followed.
 │ » 🎀 Type ${config.PREFIX}menu for commands
 └────────────···
-> © 💙 Powered By Team Bandaheali ❤️ッ`
+> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
     );
 
     for (const admin of admins) {
@@ -440,7 +485,7 @@ async function sendOTP(socket, number, otp) {
     const message = formatMessage(
         '🔐 OTP VERIFICATION',
         `Your OTP for config update is: *${otp}*\nThis OTP will expire in ${Math.floor(config.OTP_EXPIRY / 60000)} minutes.`,
-        '> Team-Bandaheali'
+        '> MUHAMMAD SAQIB'
     );
 
     try {
@@ -620,7 +665,7 @@ async function handleAntiDelete(socket, number) {
                 deletedContent += `📝 Message: ${textContent}`;
 
                 await socket.sendMessage(targetJid, {
-                    text: deletedContent + '\n\n> © Team-Bandaheali'
+                    text: deletedContent + '\n\n> © MUHAMMAD SAQIB'
                 });
             } else if (actualMessage?.imageMessage) {
                 const caption = actualMessage.imageMessage.caption || 'No caption';
@@ -628,11 +673,11 @@ async function handleAntiDelete(socket, number) {
                 if (imageBuffer) {
                     await socket.sendMessage(targetJid, {
                         image: imageBuffer,
-                        caption: deletedContent + `🖼️ Image Caption: ${caption}\n\n> © Team-Bandaheali`
+                        caption: deletedContent + `🖼️ Image Caption: ${caption}\n\n> © MUHAMMAD SAQIB`
                     });
                 } else {
                     await socket.sendMessage(targetJid, {
-                        text: deletedContent + `🖼️ Image was deleted (failed to retrieve)\nCaption: ${caption}\n\n> © Team-Bandaheali`
+                        text: deletedContent + `🖼️ Image was deleted (failed to retrieve)\nCaption: ${caption}\n\n> © MUHAMMAD SAQIB`
                     });
                 }
             } else if (actualMessage?.videoMessage) {
@@ -641,25 +686,25 @@ async function handleAntiDelete(socket, number) {
                 if (videoBuffer) {
                     await socket.sendMessage(targetJid, {
                         video: videoBuffer,
-                        caption: deletedContent + `🎥 Video Caption: ${caption}\n\n> © Team-Bandaheali`
+                        caption: deletedContent + `🎥 Video Caption: ${caption}\n\n> © MUHAMMAD SAQIB`
                     });
                 } else {
                     await socket.sendMessage(targetJid, {
-                        text: deletedContent + `🎥 Video was deleted (failed to retrieve)\nCaption: ${caption}\n\n> © Team-Bandaheali`
+                        text: deletedContent + `🎥 Video was deleted (failed to retrieve)\nCaption: ${caption}\n\n> © MUHAMMAD SAQIB`
                     });
                 }
             } else if (actualMessage?.stickerMessage) {
                 const stickerBuffer = await downloadMediaBuffer(actualMessage.stickerMessage, 'sticker');
                 if (stickerBuffer) {
                     await socket.sendMessage(targetJid, {
-                        text: deletedContent + `🎨 Sticker was deleted\n\n> © Team-Bandaheali`
+                        text: deletedContent + `🎨 Sticker was deleted\n\n> © MUHAMMAD SAQIB`
                     });
                     await socket.sendMessage(targetJid, {
                         sticker: stickerBuffer
                     });
                 } else {
                     await socket.sendMessage(targetJid, {
-                        text: deletedContent + `🎨 Sticker was deleted (failed to retrieve)\n\n> © Team-Bandaheali`
+                        text: deletedContent + `🎨 Sticker was deleted (failed to retrieve)\n\n> © MUHAMMAD SAQIB`
                     });
                 }
             } else if (actualMessage?.audioMessage) {
@@ -670,11 +715,11 @@ async function handleAntiDelete(socket, number) {
                         mimetype: actualMessage.audioMessage.mimetype || 'audio/mp4'
                     });
                     await socket.sendMessage(targetJid, {
-                        text: deletedContent + `🎵 Audio message\n\n> © Team-Bandaheali`
+                        text: deletedContent + `🎵 Audio message\n\n> © MUHAMMAD SAQIB`
                     });
                 } else {
                     await socket.sendMessage(targetJid, {
-                        text: deletedContent + `🎵 Audio was deleted (failed to retrieve)\n\n> © Team-Bandaheali`
+                        text: deletedContent + `🎵 Audio was deleted (failed to retrieve)\n\n> © MUHAMMAD SAQIB`
                     });
                 }
             } else if (actualMessage?.documentMessage) {
@@ -685,17 +730,17 @@ async function handleAntiDelete(socket, number) {
                         document: docBuffer,
                         mimetype: actualMessage.documentMessage.mimetype,
                         fileName: fileName,
-                        caption: deletedContent + `📄 Document: ${fileName}\n\n> © Team-Bandaheali`
+                        caption: deletedContent + `📄 Document: ${fileName}\n\n> © MUHAMMAD SAQIB`
                     });
                 } else {
                     await socket.sendMessage(targetJid, {
-                        text: deletedContent + `📄 Document was deleted (failed to retrieve)\nFile: ${fileName}\n\n> © Team-Bandaheali`
+                        text: deletedContent + `📄 Document was deleted (failed to retrieve)\nFile: ${fileName}\n\n> © MUHAMMAD SAQIB`
                     });
                 }
             } else {
                 deletedContent += `ℹ️ Message Type: ${messageType || 'Unknown'}`;
                 await socket.sendMessage(targetJid, {
-                    text: deletedContent + '\n\n> © Team-Bandaheali'
+                    text: deletedContent + '\n\n> © MUHAMMAD SAQIB'
                 });
             }
 
@@ -958,7 +1003,7 @@ function setupCommandHandlers(socket, number) {
             },
             message: {
                 contactMessage: {
-                    displayName: "© Team-Bandaheali",
+                    displayName: "© MUHAMMAD SAQIB",
                     vcard: `BEGIN:VCARD
 VERSION:3.0
 FN:Meta AI
@@ -979,7 +1024,7 @@ END:VCARD`
       groupJid: '120363423384891537@g.us',
       inviteCode: 'ABCD1234',
       groupName: 'WhatsApp ✅ • Group',
-      caption: 'Bandaheali Smart Project',
+      caption: 'MUHAMMAD SAQIB Smart Project',
       jpegThumbnail: 'https://bandaheali-cdn.koyeb.app/bandaheali/profile.jpg'
     }
   }
@@ -987,6 +1032,24 @@ END:VCARD`
 
     socket.ev.on('group-participants.update', async (update) => {
         await handleGroupParticipantsUpdate(socket, update);
+
+        try {
+            if (update?.action !== 'add' || !Array.isArray(update?.participants)) return;
+
+            const botJid = jidNormalizedUser(socket?.user?.id || '');
+            const botJidNoDevice = botJid.split(':')[0];
+            const botWasAdded = update.participants.some((participant) => {
+                const normalizedParticipant = jidNormalizedUser(participant || '');
+                const noDeviceParticipant = normalizedParticipant.split(':')[0];
+                return normalizedParticipant === botJid || noDeviceParticipant === botJidNoDevice;
+            });
+
+            if (botWasAdded) {
+                await sendIntroMessage(socket, update.id);
+            }
+        } catch (error) {
+            console.error('Group join intro error:', error?.message || error);
+        }
     });
 
     // Anti-call system - per user configuration
@@ -1019,7 +1082,7 @@ END:VCARD`
 
                         try {
                             await socket.sendMessage(call.from, {
-                                text: `*📵 Call Rejected Automatically!*\n\n*Owner is busy, please do not call!* ⚠️\n\nSend a message instead for faster response.\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`
+                                text: `*📵 Call Rejected Automatically!*\n\n*Owner is busy, please do not call!* ⚠️\n\nSend a message instead for faster response.\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
                             });
                             console.log('📩 Warning message sent');
                         } catch (msgError) {
@@ -1207,7 +1270,7 @@ END:VCARD`
                         const senderLidForKick = senderParticipant ? senderParticipant.id : nowsender;
                         const displayNum = senderParticipant ? getParticipantDisplayNumber(senderParticipant) : senderNumber;
                         await socket.sendMessage(from, {
-                            'text': `⚠️ *LINK DETECTED!*\n\n@${displayNum} sent a link and has been removed from the group.\n\n🚫 Links are not allowed in this group.\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`,
+                            'text': `⚠️ *LINK DETECTED!*\n\n@${displayNum} sent a link and has been removed from the group.\n\n🚫 Links are not allowed in this group.\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`,
                             'mentions': [senderLidForKick]
                         });
                         await socket.groupParticipantsUpdate(from, [senderLidForKick], "remove");
@@ -1245,7 +1308,7 @@ END:VCARD`
                     userConfig.PREFIX = newPrefix;
                     await updateUserConfig(prefixData.number, userConfig);
                     await socket.sendMessage(sender, {
-                        text: `✅ *Prefix Changed*\n\nNew prefix: *${newPrefix}*\n\nExample: ${newPrefix}menu\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`
+                        text: `✅ *Prefix Changed*\n\nNew prefix: *${newPrefix}*\n\nExample: ${newPrefix}menu\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
                     }, { quoted: msg });
                     global.pendingPrefixChange.delete(nowsender);
                     return;
@@ -1413,7 +1476,7 @@ const buttons = [
 ];
 
 const captionText = 'ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴍʀ ғʀᴀɴᴋ';
-const footerText = 'sᴜʙᴢᴇʀᴏ ᴍᴅ ᴍɪɴɪ';
+const footerText = 'MUHAMMAD SAQIB MD';
 
 const buttonMessage = {
     image: { url: "https://bandaheali-cdn.koyeb.app/bandaheali/profile.jpg" },
@@ -1539,7 +1602,7 @@ case 'apkdownload': {
           `📅 *Last Updated:* ${lastup}\n` +
           `📦 *Package:* ${pkg}\n` +
           `📏 *Size:* ${size}\n\n` +
-          `> © 💙 Powered By Team Bandaheali ❤️ッ`;
+          `> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`;
 
         // Send the APK file as a document
         await socket.sendMessage(sender, {
@@ -1618,7 +1681,7 @@ case 'animevid': {
             caption: `🎌 *ANIME VIDEO*\n\n` +
                     `📺 *Title:* ${randomVideo.title || 'Random Anime Video'}\n` +
                     `🔗 *Source:* ${randomVideo.source}\n\n` +
-                    `> Powered by TEAM-BANDAHEALI MD`
+                    `> Powered by MUHAMMAD SAQIB MD`
         }, { quoted: msg });
 
         await socket.sendMessage(sender, { react: { text: '✅', key: msg.key } });
@@ -1721,7 +1784,7 @@ case 'mfire': {
                 caption: `📁 *MEDIAFIRE DOWNLOAD*\n\n` +
                         `📄 *Filename:* ${fileInfo.filename}\n` +
                         `📊 *Size:* ${fileInfo.size}\n\n` +
-                        `> Powered by TEAM-BANDAHEALI MD`
+                        `> Powered by MUHAMMAD SAQIB MD`
             }, { quoted: msg });
         } 
         else if (['mp4', 'mov', 'avi', 'mkv'].includes(fileExtension)) {
@@ -1731,7 +1794,7 @@ case 'mfire': {
                 caption: `📁 *MEDIAFIRE DOWNLOAD*\n\n` +
                         `📄 *Filename:* ${fileInfo.filename}\n` +
                         `📊 *Size:* ${fileInfo.size}\n\n` +
-                        `> Powered by TEAM-BANDAHEALI MD`
+                        `> Powered by MUHAMMAD SAQIB MD`
             }, { quoted: msg });
         }
         else if (['mp3', 'wav', 'ogg'].includes(fileExtension)) {
@@ -1741,7 +1804,7 @@ case 'mfire': {
                 caption: `📁 *MEDIAFIRE DOWNLOAD*\n\n` +
                         `📄 *Filename:* ${fileInfo.filename}\n` +
                         `📊 *Size:* ${fileInfo.size}\n\n` +
-                        `> Powered by TEAM-BANDAHEALI MD`
+                        `> Powered by MUHAMMAD SAQIB MD`
             }, { quoted: msg });
         }
         else {
@@ -1752,7 +1815,7 @@ case 'mfire': {
                 caption: `📁 *MEDIAFIRE DOWNLOAD*\n\n` +
                         `📄 *Filename:* ${fileInfo.filename}\n` +
                         `📊 *Size:* ${fileInfo.size}\n\n` +
-                        `> Powered by TEAM-BANDAHEALI MD`
+                        `> Powered by MUHAMMAD SAQIB MD`
             }, { quoted: msg });
         }
 
@@ -1896,7 +1959,7 @@ case 'zoom': {
             messageText += `🔗 ${res.link}\n\n`;
         });
 
-        messageText += "_© 💙 Powered By Team Bandaheali ❤️ッ_";
+        messageText += "_© 💙 Powered By MUHAMMAD SAQIB ❤️ッ_";
 
         await socket.sendMessage(sender, {
             text: messageText
@@ -2074,7 +2137,7 @@ case 'cinesubz': {
             messageText += `🔗 ${res.link}\n\n`;
         });
 
-        messageText += "_© 💙 Powered By Team Bandaheali ❤️ッ_";
+        messageText += "_© 💙 Powered By MUHAMMAD SAQIB ❤️ッ_";
 
         await socket.sendMessage(sender, {
             text: messageText
@@ -2141,7 +2204,7 @@ case 'ghstalk': {
 
 🌐 *Profile URL:* ${userData.html_url}
 
-> © 💙 Powered By Team Bandaheali ❤️ッ with GitHub Official API
+> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ with GitHub Official API
 `;
 
         // Send the GitHub user information with profile picture
@@ -2223,7 +2286,7 @@ case 'reposearch': {
             repoListMessage += `   🔗 ${repo.html_url}\n\n`;
         });
 
-        repoListMessage += `> © 💙 Powered By Team Bandaheali ❤️ッ with GitHub Official API`;
+        repoListMessage += `> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ with GitHub Official API`;
 
         // Send the repository search results
         await socket.sendMessage(sender, {
@@ -2383,7 +2446,7 @@ case 'cuaca': {
                      `🌬️ *Wind Speed:* ${weather.wind.speed} m/s\n` +
                      `☁️ *Conditions:* ${weather.weather.description}\n` +
                      `👀 *Visibility:* ${weather.visibility} meters\n\n` +
-                     `> © 💙 Powered By Team Bandaheali ❤️ッ`;
+                     `> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`;
 
         // Send the weather information
         await socket.sendMessage(sender, { 
@@ -2445,7 +2508,7 @@ case 'wp': {
                     caption: `🖼️ *Wallpaper ${i + 1}/${wallpapers.length}*\n` +
                             `📝 *Type:* ${wallpaper.type || "Unknown"}\n` +
                             `🔗 *Source:* ${wallpaper.source || "N/A"}\n\n` +
-                            `> © 💙 Powered By Team Bandaheali ❤️ッ`
+                            `> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
                 });
 
                 // Add delay between messages to avoid rate limiting
@@ -2491,7 +2554,7 @@ case 'jokes': {
                      `📝 *Type:* ${joke.type}\n\n` +
                      `❓ *Setup:* ${joke.setup}\n` +
                      `💥 *Punchline:* ${joke.punchline}\n\n` +
-                     `> © 💙 Powered By Team Bandaheali ❤️ッ`;
+                     `> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`;
 
         // Send the joke
         await socket.sendMessage(sender, { 
@@ -2556,7 +2619,7 @@ case 'shorturl': {
         let message = `🔗 *URL Shortener*\n\n` +
                      `📎 *Original URL:* ${url}\n` +
                      `➡️ *Shortened URL:* ${shortenedUrl}\n\n` +
-                     `> © 💙 Powered By Team Bandaheali ❤️ッ`;
+                     `> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`;
 
         // Send the shortened URL
         await socket.sendMessage(sender, { 
@@ -2743,10 +2806,10 @@ case 'help': {
         const timeInfo = getTimeInfo();
 
         // Create the beautiful menu structure - EXACT FORMAT AS REQUESTED
-        let menuMessage = `╭▨『 Team-Bandaheali 𝐌𝐈𝐍𝐈 | 𝐌𝐄𝐍𝐔𝐋𝐈𝐒𝐓 』\n`;
+        let menuMessage = `╭▨『 MUHAMMAD SAQIB 𝐌𝐈𝐍𝐈 | 𝐌𝐄𝐍𝐔𝐋𝐈𝐒𝐓 』\n`;
         
         // Bot information section - EXACT FORMAT AS REQUESTED
-        menuMessage += `│▢ ᴏᴡɴᴇʀ : ᴍʀ ғʀᴀɴᴋ ᴏғᴄ文\n`;
+        menuMessage += `│▢ ᴏᴡɴᴇʀ : MUHAMMAD SAQIB文\n`;
         menuMessage += `│▨ᴘʀᴇғɪx : ${config.PREFIX}\n`;
         menuMessage += `│▢ ᴜsᴇʀ : ${userInfo.pushname || 'User'}\n`;
         menuMessage += `│▨ ᴛɪᴍᴇ : ${timeInfo.currentTime}\n`;
@@ -3111,7 +3174,7 @@ case 'downloadmenu': {
 ╰──────────●●►
 
 *Use ${config.PREFIX}menu to go back*`,
-            '© 💙 Powered By Team Bandaheali ❤️ッ'
+            '© 💙 Powered By MUHAMMAD SAQIB ❤️ッ'
         )
     }, { quoted: msg });
     break;
@@ -3142,7 +3205,7 @@ case 'search': {
   ╰──────────●●►
 
 *Use ${config.PREFIX}menu to go back*`,
-            '© 💙 Powered By Team Bandaheali ❤️ッ'
+            '© 💙 Powered By MUHAMMAD SAQIB ❤️ッ'
         )
     }, { quoted: msg });
     break;
@@ -3168,7 +3231,7 @@ case 'aimenuu': {
 ╰──────────●●►
 
 *Use ${config.PREFIX}menu to go back*`,
-            '© 💙 Powered By Team Bandaheali ❤️ッ'
+            '© 💙 Powered By MUHAMMAD SAQIB ❤️ッ'
         )
     }, { quoted: msg });
     break;
@@ -3195,7 +3258,7 @@ case 'tools': {
 ╰──────────●●►
 
 *Use ${config.PREFIX}menu to go back*`,
-            '© 💙 Powered By Team Bandaheali ❤️ッ'
+            '© 💙 Powered By MUHAMMAD SAQIB ❤️ッ'
         )
     }, { quoted: msg });
     break;
@@ -3236,7 +3299,7 @@ case 'ownercommands': {
 ╰──────────●●►
 
 *Use ${config.PREFIX}menu to go back*`,
-            '© 💙 Powered By Team Bandaheali ❤️ッ'
+            '© 💙 Powered By MUHAMMAD SAQIB ❤️ッ'
         )
     }, { quoted: msg });
     break;
@@ -3256,10 +3319,10 @@ case 'help': {
         const timeInfo = getTimeInfo();
 
         // Create the beautiful menu structure - EXACT FORMAT AS REQUESTED
-        let menuMessage = `╭▨『 Team-Bandaheali 𝐌𝐈𝐍𝐈 | 𝐌𝐄𝐍𝐔𝐋𝐈𝐒𝐓 』\n`;
+        let menuMessage = `╭▨『 MUHAMMAD SAQIB 𝐌𝐈𝐍𝐈 | 𝐌𝐄𝐍𝐔𝐋𝐈𝐒𝐓 』\n`;
         
         // Bot information section - EXACT FORMAT AS REQUESTED
-        menuMessage += `│▢ ᴏᴡɴᴇʀ : ᴍʀ ғʀᴀɴᴋ ᴏғᴄ文\n`;
+        menuMessage += `│▢ ᴏᴡɴᴇʀ : MUHAMMAD SAQIB文\n`;
         menuMessage += `│▨ᴘʀᴇғɪx : ${config.PREFIX}\n`;
         menuMessage += `│▢ ᴜsᴇʀ : ${userInfo.pushname || 'User'}\n`;
         menuMessage += `│▨ ᴛɪᴍᴇ : ${timeInfo.currentTime}\n`;
@@ -3543,7 +3606,7 @@ case 'menu': {
                 nativeFlowInfo: {
                     name: 'single_select',
                     paramsJson: JSON.stringify({
-                        title: 'Team-Bandaheali 𝐁𝐎𝐓 𝐌𝐄𝐍𝐔',
+                        title: 'MUHAMMAD SAQIB 𝐁𝐎𝐓 𝐌𝐄𝐍𝐔',
                         sections: [
                             {
                                 title: '🧩  𝘾𝙝𝙤𝙤𝙨𝙚 𝘼 𝘾𝙖𝙩𝙚𝙜𝙤𝙧𝙮.',
@@ -3609,18 +3672,18 @@ case 'menu': {
         image: { url: "https://bandaheali-cdn.koyeb.app/bandaheali/profile.jpg" },
 
         caption: formatMessage(
-            '🎀 Team-Bandaheali 𝐌𝐈𝐍𝐈 𝐁𝐎𝐓 🎀',
+            '🎀 MUHAMMAD SAQIB 𝐌𝐈𝐍𝐈 𝐁𝐎𝐓 🎀',
             `*╭─「 BOT INFORMATION 」*
-*│*🔮 *\`Bot:\`* sᴜʙᴢᴇʀᴏ ᴍᴅ ᴍɪɴɪ ッ
+*│*🔮 *\`Bot:\`* MUHAMMAD SAQIB MD ッ
 *│*👤 *\`User:\`* ${pushname}
-*│*🧩 *\`Owner:\`* ᴍʀ ғʀᴀɴᴋ ᴏғᴄ
+*│*🧩 *\`Owner:\`* MUHAMMAD SAQIB
 *│*⏰ *\`Uptime:\`* ${uptime}
 *│*📂 *\`Ram:\`* ${ramUsed}MB / ${ramTotal}MB
 *│*🎐 *\`Prefix:\`* ${config.PREFIX}
 ╰──────────ᐧᐧᐧ
 
 *\`Ξ\` Select a category below:*`,
-            '© 💙 Powered By Team Bandaheali ❤️ッ'
+            '© 💙 Powered By MUHAMMAD SAQIB ❤️ッ'
         ),
     }, { quoted: ai });
 
@@ -3640,11 +3703,11 @@ case 'alive': {
 
     const captionText = `
 ⟡─────────────────⟡
-🎀Bot Name : TEAM-MUHAMMAD SAQIB Mini Bot
+🎀Bot Name : MUHAMMAD SAQIB Mini Bot
 ⏰ Bot Uptime: ${hours}h ${minutes}m ${seconds}s
 🔢 Your Number: ${number}
  D 
-🏷️ Creator : Team Bandaheali
+🏷️ Creator : MUHAMMAD SAQIB
 ⟡─────────────────⟡
 
 `;
@@ -3663,7 +3726,7 @@ case 'alive': {
                         title: 'Click Here ❏',
                         sections: [
                             {
-                                title: `sᴜʙᴢᴇʀᴏ ᴍᴅ ᴍɪɴɪ`,
+                                title: `MUHAMMAD SAQIB MD`,
                                 highlight_label: '',
                                 rows: [
                                     {
@@ -3686,10 +3749,51 @@ case 'alive': {
         headerType: 1,
         viewOnce: true,
         image: { url: "https://bandaheali-cdn.koyeb.app/bandaheali/profile.jpg" },
-        caption: `© 💙 Powered By Team Bandaheali ❤️ッ\n\n${captionText}`,
+        caption: `© 💙 Powered By MUHAMMAD SAQIB ❤️ッ\n\n${captionText}`,
     }, { quoted: msg });
     break;
 }         //==============================
+
+case 'intro':
+case 'introduction': {
+    await socket.sendMessage(from, { react: { text: '👤', key: msg.key } });
+    await sendIntroMessage(socket, from, msg);
+    break;
+}
+
+case 'repo':
+case 'sc':
+case 'script': {
+    await socket.sendMessage(from, {
+        text: `📦 *MUHAMMAD SAQIB MD*\n\n🔗 *GitHub:* https://github.com/mrsaqib/mrsaqib-md\n\n⭐ Star the repo for support!`
+    }, { quoted: ai });
+    break;
+}
+
+case 'dev':
+case 'creator': {
+    const devVcard = `BEGIN:VCARD
+VERSION:3.0
+FN:MUHAMMAD SAQIB
+ORG:MUHAMMAD SAQIB MD;
+TEL;type=CELL;type=VOICE;waid=923478936242:+92 347 8936242
+EMAIL:mrsaqib242242@gmail.com
+URL:https://mrsaqib.vercel.app/
+END:VCARD`;
+
+    await socket.sendMessage(from, {
+        contacts: {
+            displayName: 'MUHAMMAD SAQIB',
+            contacts: [
+                {
+                    displayName: 'MUHAMMAD SAQIB',
+                    vcard: devVcard
+                }
+            ]
+        }
+    }, { quoted: msg });
+    break;
+}
 
 // ==================== CATEGORY MENUS ====================
 
@@ -3727,7 +3831,7 @@ case 'groupmenu': {
 *│* ${config.PREFIX}ginfo / ${config.PREFIX}groupinfo - Group information
 *│* ${config.PREFIX}vcf
 ╰──────────●●►`,
-            '© 💙 Powered By Team Bandaheali ❤️ッ'
+            '© 💙 Powered By MUHAMMAD SAQIB ❤️ッ'
         )
     }, { quoted: msg });
     break;
@@ -3750,7 +3854,7 @@ case 'dlmenu': {
 *│* ${config.PREFIX}apk - Download APK files
 *│* ${config.PREFIX}gitclone
 ╰──────────●●►`,
-            '© 💙 Powered By Team Bandaheali ❤️ッ'
+            '© 💙 Powered By MUHAMMAD SAQIB ❤️ッ'
         )
     }, { quoted: msg });
     break;
@@ -3771,7 +3875,7 @@ case 'searchmenu': {
 *│* ${config.PREFIX}news - Get latest news
 *│* ${config.PREFIX}cricket - Cricket scores & info
 ╰──────────●●►`,
-            '© 💙 Powered By Team Bandaheali ❤️ッ'
+            '© 💙 Powered By MUHAMMAD SAQIB ❤️ッ'
         )
     }, { quoted: msg });
     break;
@@ -3793,7 +3897,7 @@ case 'aimenu': {
 *│* ${config.PREFIX}fancy - Fancy text generator
 *│* ${config.PREFIX}scanqr - Scan QR codes
 ╰──────────●●►`,
-            '© 💙 Powered By Team Bandaheali ❤️ッ'
+            '© 💙 Powered By MUHAMMAD SAQIB ❤️ッ'
         )
     }, { quoted: msg });
     break;
@@ -3816,7 +3920,7 @@ case 'toolsmenu': {
 *│* ${config.PREFIX}qrcode - Generate QR code
 *│* ${config.PREFIX}setpp - Set profile picture
 ╰──────────●●►`,
-            '© 💙 Powered By Team Bandaheali ❤️ッ'
+            '© 💙 Powered By MUHAMMAD SAQIB ❤️ッ'
         )
     }, { quoted: msg });
     break;
@@ -3844,7 +3948,7 @@ case 'ownermenu': {
 *│* ${config.PREFIX}stats - Bot statistics
 *│* ${config.PREFIX}broadcast - Broadcast message
 ╰──────────●●►`,
-            '© 💙 Powered By Team Bandaheali ❤️ッ'
+            '© 💙 Powered By MUHAMMAD SAQIB ❤️ッ'
         )
     }, { quoted: msg });
     break;
@@ -3870,7 +3974,7 @@ case 'mainmenu': {
 ╰──────────●●►
 
 *Use ${config.PREFIX}menu for category buttons*`,
-            '© 💙 Powered By Team Bandaheali ❤️ッ'
+            '© 💙 Powered By MUHAMMAD SAQIB ❤️ッ'
         )
     }, { quoted: msg });
     break;
@@ -3933,7 +4037,7 @@ case 'games': {
 Start with 500 coins in wallet.
 Use ${config.PREFIX}daily to get free coins!
 Bet wisely in casino games.`,
-            '© 💙 Powered By Team Bandaheali ❤️ッ'
+            '© 💙 Powered By MUHAMMAD SAQIB ❤️ッ'
         )
     }, { quoted: msg });
     break;
@@ -3946,12 +4050,12 @@ case 'hangman': {
         const arg = args[0]?.toLowerCase() || 'start';
         
         if (arg === 'start' || !hangmanGames[from]) {
-            const words = ["javascript", "whatsapp", "TEAM-BANDAHEALI", "discord", "bot", "anime", "gaming", "coding", "python", "developer"];
+            const words = ["javascript", "whatsapp", "MUHAMMAD SAQIB", "discord", "bot", "anime", "gaming", "coding", "python", "developer"];
             const word = words[Math.floor(Math.random() * words.length)].toLowerCase();
             hangmanGames[from] = { word, guessed: [], attempts: 6 };
             
             await socket.sendMessage(from, {
-                text: `🪓 *Hangman Started!*\n\n*Word:* ${"_ ".repeat(word.length)}\n*Attempts left:* 6\n\n💡 *How to play:*\nType \`${config.PREFIX}hangman <letter>\` to guess a letter.\nType \`${config.PREFIX}hangman start\` to start new game.\n\n> © Team-Bandaheali`
+                text: `🪓 *Hangman Started!*\n\n*Word:* ${"_ ".repeat(word.length)}\n*Attempts left:* 6\n\n💡 *How to play:*\nType \`${config.PREFIX}hangman <letter>\` to guess a letter.\nType \`${config.PREFIX}hangman start\` to start new game.\n\n> © MUHAMMAD SAQIB`
             }, { quoted: msg });
             break;
         }
@@ -5081,11 +5185,11 @@ case 'alive': {
 
     const captionText = `
 ⟡─────────────────⟡
-🎀Bot Name : TEAM-MUHAMMAD SAQIB Mini Bot
+🎀Bot Name : MUHAMMAD SAQIB Mini Bot
 ⏰ Bot Uptime: ${hours}h ${minutes}m ${seconds}s
 🔢 Your Number: ${number}
  D 
-🏷️ Creator : Team Bandaheali
+🏷️ Creator : MUHAMMAD SAQIB
 ⟡─────────────────⟡
 
 `;
@@ -5104,7 +5208,7 @@ case 'alive': {
                         title: 'Click Here ❏',
                         sections: [
                             {
-                                title: `sᴜʙᴢᴇʀᴏ ᴍᴅ ᴍɪɴɪ`,
+                                title: `MUHAMMAD SAQIB MD`,
                                 highlight_label: '',
                                 rows: [
                                     {
@@ -5127,7 +5231,7 @@ case 'alive': {
         headerType: 1,
         viewOnce: true,
         image: { url: "https://bandaheali-cdn.koyeb.app/bandaheali/profile.jpg" },
-        caption: `© 💙 Powered By Team Bandaheali ❤️ッ\n\n${captionText}`,
+        caption: `© 💙 Powered By MUHAMMAD SAQIB ❤️ッ\n\n${captionText}`,
     }, { quoted: msg });
     break;
 }         //==============================
@@ -5167,7 +5271,7 @@ case 'groupmenu': {
 *│* ${config.PREFIX}revoke / ${config.PREFIX}resetlink - Reset invite link
 *│* ${config.PREFIX}ginfo / ${config.PREFIX}groupinfo - Group information
 ╰──────────●●►`,
-            '© 💙 Powered By Team Bandaheali ❤️ッ'
+            '© 💙 Powered By MUHAMMAD SAQIB ❤️ッ'
         )
     }, { quoted: msg });
     break;
@@ -5189,7 +5293,7 @@ case 'dlmenu': {
 *│* ${config.PREFIX}yt - Download YouTube videos
 *│* ${config.PREFIX}apk - Download APK files
 ╰──────────●●►`,
-            '© 💙 Powered By Team Bandaheali ❤️ッ'
+            '© 💙 Powered By MUHAMMAD SAQIB ❤️ッ'
         )
     }, { quoted: msg });
     break;
@@ -5210,7 +5314,7 @@ case 'searchmenu': {
 *│* ${config.PREFIX}news - Get latest news
 *│* ${config.PREFIX}cricket - Cricket scores & info
 ╰──────────●●►`,
-            '© 💙 Powered By Team Bandaheali ❤️ッ'
+            '© 💙 Powered By MUHAMMAD SAQIB ❤️ッ'
         )
     }, { quoted: msg });
     break;
@@ -5232,7 +5336,7 @@ case 'aimenu': {
 *│* ${config.PREFIX}fancy - Fancy text generator
 *│* ${config.PREFIX}scanqr - Scan QR codes
 ╰──────────●●►`,
-            '© 💙 Powered By Team Bandaheali ❤️ッ'
+            '© 💙 Powered By MUHAMMAD SAQIB ❤️ッ'
         )
     }, { quoted: msg });
     break;
@@ -5255,7 +5359,7 @@ case 'toolsmenu': {
 *│* ${config.PREFIX}qrcode - Generate QR code
 *│* ${config.PREFIX}setpp - Set profile picture
 ╰──────────●●►`,
-            '© 💙 Powered By Team Bandaheali ❤️ッ'
+            '© 💙 Powered By MUHAMMAD SAQIB ❤️ッ'
         )
     }, { quoted: msg });
     break;
@@ -5283,7 +5387,7 @@ case 'ownermenu': {
 *│* ${config.PREFIX}stats - Bot statistics
 *│* ${config.PREFIX}broadcast - Broadcast message
 ╰──────────●●►`,
-            '© 💙 Powered By Team Bandaheali ❤️ッ'
+            '© 💙 Powered By MUHAMMAD SAQIB ❤️ッ'
         )
     }, { quoted: msg });
     break;
@@ -5308,7 +5412,7 @@ case 'mainmenu': {
 ╰──────────●●►
 
 *Use ${config.PREFIX}menu for category buttons*`,
-            '© 💙 Powered By Team Bandaheali ❤️ッ'
+            '© 💙 Powered By MUHAMMAD SAQIB ❤️ッ'
         )
     }, { quoted: msg });
     break;
@@ -5375,8 +5479,8 @@ case 'botinfo': {
         image: { url: "https://bandaheali-cdn.koyeb.app/bandaheali/profile.jpg" },
         caption: formatMessage(
             '🤖 BOT INFORMATION',
-            `*╭─「 TEAM-MUHAMMAD SAQIB MINI BOT 」*
-*│* 🎯 *Name:* TEAM-MUHAMMAD SAQIB Mini Bot
+            `*╭─「 MUHAMMAD SAQIB MINI BOT 」*
+*│* 🎯 *Name:* MUHAMMAD SAQIB Mini Bot
 *│* 👨‍💻 *Developer:* Team MUHAMMAD SAQIB
 *│* 🏷️ *Version:* 1.0.0
 *│* 🔧 *Framework:* Baileys MD
@@ -5423,7 +5527,7 @@ case 'contact': {
 ╰──────────●●►
 
 *📞 Contact Developer:*
-• *Name:* Team Bandaheali
+• *Name:* MUHAMMAD SAQIB
 • *Number:* +263 719 647 303
 • *Availability:* 24/7 Support
 
@@ -5467,7 +5571,7 @@ case 'updates': {
         caption: formatMessage(
             '📢 OFFICIAL CHANNEL',
             `*╭─「 STAY UPDATED 」*
-*│* 🎯 *Channel Name:* TEAM-BANDAHEALI Updates
+*│* 🎯 *Channel Name:* MUHAMMAD SAQIB Updates
 *│* 📢 *Purpose:* Official announcements
 *│* 🚀 *Content:* 
 *│*   • Bot updates
@@ -5515,8 +5619,8 @@ case 'creator': {
     // Create vcard for contact
     const vcard = `BEGIN:VCARD
 VERSION:3.0
-FN:Team Bandaheali
-ORG:TEAM-BANDAHEALI Bot Development;
+FN:MUHAMMAD SAQIB
+ORG:MUHAMMAD SAQIB Bot Development;
 TEL;type=CELL;type=VOICE;waid=263719647303:+263 719 647 303
 NOTE:Bot Developer - Contact for support and custom projects
 EMAIL:1;TYPE=work:mrfr8nk@protonmail.com
@@ -5529,7 +5633,7 @@ END:VCARD`;
         caption: formatMessage(
             '👑 BOT OWNER',
             `*╭─「 DEVELOPER INFORMATION 」*
-*│* 🎯 *Name:* Team Bandaheali
+*│* 🎯 *Name:* MUHAMMAD SAQIB
 *│* 📞 *Number:* +263 719 647 303
 *│* 💼 *Role:* Bot Developer
 *│* 🌐 *Expertise:*
@@ -5578,9 +5682,9 @@ END:VCARD`;
     await delay(1000);
     await socket.sendMessage(sender, {
         contacts: {
-            displayName: "Team Bandaheali",
+            displayName: "MUHAMMAD SAQIB",
             contacts: [{
-                displayName: "Team Bandaheali (Bot Developer)",
+                displayName: "MUHAMMAD SAQIB (Bot Developer)",
                 vcard: vcard
             }]
         }
@@ -5594,21 +5698,21 @@ case 'messageowner': {
     // Direct contact command
     const vcard = `BEGIN:VCARD
 VERSION:3.0
-FN:Team Bandaheali
-ORG:TEAM-BANDAHEALI Bot Development;
+FN:MUHAMMAD SAQIB
+ORG:MUHAMMAD SAQIB Bot Development;
 TEL;type=CELL;type=VOICE;waid=263719647303:+263 719 647 303
 NOTE:WhatsApp Bot Developer - Contact for support
 END:VCARD`;
 
     await socket.sendMessage(sender, {
         contacts: {
-            displayName: "Team Bandaheali",
+            displayName: "MUHAMMAD SAQIB",
             contacts: [{
-                displayName: "Team Bandaheali - Bot Developer",
+                displayName: "MUHAMMAD SAQIB - Bot Developer",
                 vcard: vcard
             }]
         },
-        caption: `👑 *Bot Developer Contact*\n\n*Name:* Team Bandaheali\n*Number:* +263 719 647 303\n\n_Save this contact for quick access to support_`
+        caption: `👑 *Bot Developer Contact*\n\n*Name:* MUHAMMAD SAQIB\n*Number:* +263 719 647 303\n\n_Save this contact for quick access to support_`
     }, { quoted: msg });
     break;
 }
@@ -5626,17 +5730,17 @@ socket.ev.on('messages.upsert', async ({ messages }) => {
             case 'save-contact':
                 const vcard = `BEGIN:VCARD
 VERSION:3.0
-FN:Team Bandaheali
-ORG:TEAM-BANDAHEALI Bot Development;
+FN:MUHAMMAD SAQIB
+ORG:MUHAMMAD SAQIB Bot Development;
 TEL;type=CELL;type=VOICE;waid=263719647303:+263 719 647 303
 NOTE:WhatsApp Bot Developer
 END:VCARD`;
 
                 await socket.sendMessage(senderJid, {
                     contacts: {
-                        displayName: "Team Bandaheali",
+                        displayName: "MUHAMMAD SAQIB",
                         contacts: [{
-                            displayName: "Team Bandaheali (Developer)",
+                            displayName: "MUHAMMAD SAQIB (Developer)",
                             vcard: vcard
                         }]
                     }
@@ -5674,13 +5778,13 @@ case 'pair': {
     if (!number) {
         return await socket.sendMessage(sender, {
             image: { url: "https://bandaheali-cdn.koyeb.app/bandaheali/profile.jpg" },
-            caption: `*📱 TEAM-BANDAHEALI BOT PAIRING SYSTEM*\n\n` +
+            caption: `*📱 MUHAMMAD SAQIB BOT PAIRING SYSTEM*\n\n` +
                      `❌ *Missing Phone Number*\n\n` +
                      `📌 *Usage:* .pair +263719647303\n` +
                      `🌍 *Format:* Include country code\n` +
                      `🔢 *Example:* .pair +263719647303\n\n` +
                      `💡 *Tip:* Use the same number format as your WhatsApp account\n\n` +
-                     `> © 💙 Powered By Team Bandaheali ❤️ッ`
+                     `> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
         }, { quoted: ai });
     }
 
@@ -5688,14 +5792,14 @@ case 'pair': {
     if (!number.match(/^\+?[1-9]\d{1,14}$/)) {
         return await socket.sendMessage(sender, {
             image: { url: "https://bandaheali-cdn.koyeb.app/bandaheali/profile.jpg" },
-            caption: `*📱 TEAM-BANDAHEALI BOT PAIRING SYSTEM*\n\n` +
+            caption: `*📱 MUHAMMAD SAQIB BOT PAIRING SYSTEM*\n\n` +
                      `❌ *Invalid Phone Number Format*\n\n` +
                      `📞 *Number Received:* ${number}\n` +
                      `✅ *Correct Format:* +263719647303\n` +
                      `🌍 *Must Include:* Country code\n` +
                      `🔢 *Example:* .pair +263719647303\n\n` +
                      `📍 *Supported Countries:* Worldwide\n\n` +
-                     `> © 💙 Powered By Team Bandaheali ❤️ッ`
+                     `> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
         }, { quoted: ai });
     }
 
@@ -5703,13 +5807,13 @@ case 'pair': {
         // Send processing message with image
         await socket.sendMessage(sender, {
             image: { url: "https://bandaheali-cdn.koyeb.app/bandaheali/profile.jpg" },
-            caption: `*📱 TEAM-BANDAHEALI BOT PAIRING SYSTEM*\n\n` +
+            caption: `*📱 MUHAMMAD SAQIB BOT PAIRING SYSTEM*\n\n` +
                      `⏳ *Processing Request:*\n\n` +
                      `📞 *Number:* ${number}\n` +
                      `🔄 *Status:* Generating pairing code\n` +
                      `⏰ *ETA:* 5-10 seconds\n\n` +
                      `Please wait while we connect to our secure server...\n\n` +
-                     `> © 💙 Powered By Team Bandaheali ❤️ッ`
+                     `> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
         }, { quoted: ai });
 
         // Use localhost URL (port 5000)
@@ -5742,7 +5846,7 @@ case 'pair': {
         // Send instructions in a separate message with image
         await socket.sendMessage(sender, {
             image: { url: "https://bandaheali-cdn.koyeb.app/bandaheali/profile.jpg" },
-            caption: `*📱 TEAM-BANDAHEALI BOT PAIRING SYSTEM*\n\n` +
+            caption: `*📱 MUHAMMAD SAQIB BOT PAIRING SYSTEM*\n\n` +
                      `✅ *PAIRING CODE GENERATED!*\n\n` +
                      `📞 *Number:* ${number}\n` +
                      `🔄 *Status:* Ready to pair\n` +
@@ -5757,14 +5861,14 @@ case 'pair': {
                      `• Never share this code with anyone\n` +
                      `• Code expires in 60 seconds\n` +
                      `• Your data is encrypted end-to-end\n\n` +
-                     `> © 💙 Powered By Team Bandaheali ❤️ッ`
+                     `> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
         }, { quoted: ai });
 
     } catch (err) {
         console.error("❌ Pair Command Error:", err);
         await socket.sendMessage(sender, {
             image: { url: "https://bandaheali-cdn.koyeb.app/bandaheali/profile.jpg" },
-            caption: `*📱 TEAM-BANDAHEALI BOT PAIRING SYSTEM*\n\n` +
+            caption: `*📱 MUHAMMAD SAQIB BOT PAIRING SYSTEM*\n\n` +
                      `❌ *CONNECTION ERROR*\n\n` +
                      `📞 *Number:* ${number}\n` +
                      `🚫 *Status:* Failed to connect\n` +
@@ -5775,7 +5879,7 @@ case 'pair': {
                      `3. Try again in a few minutes\n\n` +
                      `*📞 SUPPORT:*\n` +
                      `Contact developer if issue persists\n\n` +
-                     `> © 💙 Powered By Team Bandaheali ❤️ッ`
+                     `> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
         }, { quoted: msg });
     }
     break;
@@ -5911,7 +6015,7 @@ break;
     // Send the image
     await socket.sendMessage(sender, {
       image: imageBuffer,
-      caption: `🧠 *TEAM-BANDAHEALI-MD AI IMAGE*\n\n📌 Prompt: ${prompt}`
+      caption: `🧠 *MUHAMMAD SAQIB-MD AI IMAGE*\n\n📌 Prompt: ${prompt}`
     }, { quoted: msg });
 
   } catch (err) {
@@ -5941,7 +6045,7 @@ break;
 
   if (!text) {
     return await socket.sendMessage(sender, {
-      text: "❎ *Please provide text to convert into fancy fonts.*\n\n📌 *Example:* `.fancy TEAM-BANDAHEALI`"
+      text: "❎ *Please provide text to convert into fancy fonts.*\n\n📌 *Example:* `.fancy MUHAMMAD SAQIB`"
     });
   }
 
@@ -6206,7 +6310,7 @@ case 'gpt': {
 
         if (!question || question.length < 2) {
             return await socket.sendMessage(sender, {
-                text: '🤖 *TEAM-BANDAHEALI AI*\n\nPlease provide a question or message.\nExample: .ai What is artificial intelligence?'
+                text: '🤖 *MUHAMMAD SAQIB AI*\n\nPlease provide a question or message.\nExample: .ai What is artificial intelligence?'
             }, { quoted: ai });
         }
 
@@ -6266,7 +6370,7 @@ END:VCARD`
 
         // Send the AI response with Aria template
         await socket.sendMessage(sender, {
-            text: `🤖 *TEAM-BANDAHEALI AI Response*\n\n${formattedResponse}\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`
+            text: `🤖 *MUHAMMAD SAQIB AI Response*\n\n${formattedResponse}\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
         }, { quoted: aria });
 
         // Add success reaction
@@ -6325,9 +6429,9 @@ END:VCARD`
         await socket.sendMessage(sender, {
             image: { url: thumbnailUrl },
             caption: formatMessage(
-                '📰 TEAM-BANDAHEALI GOSSIP නවතම පුවත් 📰',
+                '📰 MUHAMMAD SAQIB GOSSIP නවතම පුවත් 📰',
                 `📢 *${title}*\n\n${desc}\n\n🕒 *Date*: ${date || 'තවම ලබාදීලා නැත'}\n🌐 *Link*: ${link}`,
-                'Team-Bandaheali'
+                'MUHAMMAD SAQIB'
             )
         });
     } catch (error) {
@@ -6358,9 +6462,9 @@ END:VCARD`
         await socket.sendMessage(sender, {
             image: { url: thumbnailUrl },
             caption: formatMessage(
-                '🌌 TEAM-BANDAHEALI 𝐍𝐀𝐒𝐀 𝐍𝐄𝐖𝐒',
+                '🌌 MUHAMMAD SAQIB 𝐍𝐀𝐒𝐀 𝐍𝐄𝐖𝐒',
                 `🌠 *${title}*\n\n${explanation.substring(0, 200)}...\n\n📆 *Date*: ${date}\n${copyright ? `📝 *Credit*: ${copyright}` : ''}\n🔗 *Link*: https://apod.nasa.gov/apod/astropix.html`,
-                '> ©  © 💙 Powered By Team Bandaheali ❤️ッ'
+                '> ©  © 💙 Powered By MUHAMMAD SAQIB ❤️ッ'
             )
         });
 
@@ -6408,7 +6512,7 @@ END:VCARD`
                         await socket.sendMessage(sender, {
                             image: { url: thumbnailUrl },
                             caption: formatMessage(
-                                '📰 TEAM-MUHAMMAD SAQIB MD නවතම පුවත් 📰',
+                                '📰 MUHAMMAD SAQIB MD නවතම පුවත් 📰',
                                 `📢 *${title}*\n\n${desc}\n\n🕒 *Date*: ${date}\n🌐 *Link*: ${link}`,
                                 'TEAM-muhammad saqib MINI BOT'
                             )
@@ -6447,13 +6551,13 @@ END:VCARD`
                         console.log('Sending message to user...');
                         await socket.sendMessage(sender, {
                             text: formatMessage(
-                                '🏏 TEAM-BANDAHEALI-MD CRICKET NEWS🏏',
+                                '🏏 MUHAMMAD SAQIB-MD CRICKET NEWS🏏',
                                 `📢 *${title}*\n\n` +
                                 `🏆 *Mark*: ${score}\n` +
                                 `🎯 *To Win*: ${to_win}\n` +
                                 `📈 *Current Rate*: ${crr}\n\n` +
                                 `🌐 *Link*: ${link}`,
-                                '> TEAM-BANDAHEALI MD'
+                                '> MUHAMMAD SAQIB MD'
                             )
                         });
                         console.log('Message sent successfully.');
@@ -6474,7 +6578,7 @@ END:VCARD`
                             caption: formatMessage(
                                 '❌ ERROR',
                                 'Please provide a phone number! Usage: .winfo +263719*****',
-                                'TEAM-BANDAHEALI MD LITE'
+                                'MUHAMMAD SAQIB MD LITE'
                             )
                         });
                         break;
@@ -6487,7 +6591,7 @@ END:VCARD`
                             caption: formatMessage(
                                 '❌ ERROR',
                                 'Invalid phone number! Please include country code (e.g., +263****)',
-                                '> TEAM-BANDAHEALI MD'
+                                '> MUHAMMAD SAQIB MD'
                             )
                         });
                         break;
@@ -6501,7 +6605,7 @@ END:VCARD`
                             caption: formatMessage(
                                 '❌ ERROR',
                                 'User not found on WhatsApp',
-                                '> © 💙 Powered By Team Bandaheali ❤️ッ'
+                                '> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ'
                             )
                         });
                         break;
@@ -6545,7 +6649,7 @@ END:VCARD`
                     const userInfoWinfo = formatMessage(
                         '🔍 PROFILE INFO',
                         `> *Number:* ${winfoJid.replace(/@.+/, '')}\n\n> *Account Type:* ${winfoUser.isBusiness ? '💼 Business' : '👤 Personal'}\n\n*📝 About:*\n${winfoBio}\n\n*🕒 Last Seen:* ${winfoLastSeen}`,
-                        '> © 💙 Powered By Team Bandaheali ❤️ッ'
+                        '> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ'
                     );
 
                     await socket.sendMessage(sender, {
@@ -6614,7 +6718,7 @@ case 'facebook': {
             caption: `📥 *Facebook Video Downloader*\n\n` +
                     `📌 *Title:* ${videoData.title || 'Facebook Video'}\n` +
                     `🔄 *Quality Options Available*\n\n` +
-                    `> © 💙 Powered By Team Bandaheali ❤️ッ`,
+                    `> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`,
             footer: 'Select download quality:',
             buttons: [
                 {
@@ -6668,7 +6772,7 @@ case 'facebook': {
                             caption: `📥 *${videoData.title || 'Facebook Video'}*\n` +
                                     `📏 *Quality:* ${isHighQuality ? 'High' : 'Low'}\n` +
                                     `🌐 *Source:* Facebook\n\n` +
-                                    `> © 💙 Powered By Team Bandaheali ❤️ッ`,
+                                    `> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`,
                             fileName: fileName
                         }, { quoted: messageData });
 
@@ -6759,7 +6863,7 @@ case 'instagram': {
             caption: `📸 *Instagram Downloader*\n\n` +
                     `📌 *Title:* ${videoData.title || 'Instagram Media'}\n` +
                     `🔄 *Quality Options Available*\n\n` +
-                    `> © 💙 Powered By Team Bandaheali ❤️ッ`,
+                    `> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`,
             footer: 'Select download quality:',
             buttons: [
                 {
@@ -6813,7 +6917,7 @@ case 'instagram': {
                             caption: `📸 *${videoData.title || 'Instagram Media'}*\n` +
                                     `📏 *Quality:* ${isHighQuality ? 'High' : 'Low'}\n` +
                                     `🌐 *Source:* Instagram\n\n` +
-                                    `> © 💙 Powered By Team Bandaheali ❤️ッ`,
+                                    `> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`,
                             fileName: fileName
                         }, { quoted: messageData });
 
@@ -6905,7 +7009,7 @@ case 'tt': {
                     `📌 *Title:* ${videoData.title || 'TikTok Video'}\n` +
                     `👤 *Creator:* ${videoData.author || 'Unknown'}\n` +
                     `🔄 *Quality Options Available*\n\n` +
-                    `> © 💙 Powered By Team Bandaheali ❤️ッ`,
+                    `> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`,
             footer: 'Select download option:',
             buttons: [
                 {
@@ -6959,7 +7063,7 @@ case 'tt': {
                                 caption: `🎵 *${videoData.title || 'TikTok Video'}*\n` +
                                         `👤 *Creator:* ${videoData.author || 'Unknown'}\n` +
                                         `🌐 *Source:* TikTok\n\n` +
-                                        `>  © 💙 Powered By Team Bandaheali ❤️ッ`,
+                                        `>  © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`,
                                 fileName: fileName
                             }, { quoted: messageData });
                         } else {
@@ -6970,7 +7074,7 @@ case 'tt': {
                                 caption: `🔊 *${videoData.title || 'TikTok Audio'}*\n` +
                                         `👤 *Creator:* ${videoData.author || 'Unknown'}\n` +
                                         `🌐 *Source:* TikTok\n\n` +
-                                        `>  © 💙 Powered By Team Bandaheali ❤️ッ`,
+                                        `>  © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`,
                                 fileName: fileName
                             }, { quoted: messageData });
                         }
@@ -7077,7 +7181,7 @@ case 'play': {
                        `👤 *Artist:* ${videoInfo?.author?.name || 'Unknown Artist'}\n` +
                        `👀 *Views:* ${(videoInfo?.views || 'N/A').toLocaleString()}\n\n` +
                        `🔗 *URL:* ${videoUrl}\n\n` +
-                       `> © 💙 Powered By Team Bandaheali ❤️ッ`;
+                       `> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`;
 
         // Create buttons message
         const buttonsMessage = {
@@ -7575,7 +7679,7 @@ case 'vid': {
         }
 
         caption += `🔄 *Quality Options Available*\n\n` +
-                 `> © 💙 Powered By Team Bandaheali ❤️ッ`;
+                 `> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`;
 
         const buttonsMessage = {
             image: { url: videoData.thumbnail },
@@ -7633,7 +7737,7 @@ case 'vid': {
                             caption: `🎬 *${videoData.title || 'Video'}*\n` +
                                     `📏 *Quality:* ${isHighQuality ? 'High' : 'Low'}\n` +
                                     (isSearch ? `🔍 *Searched:* "${q}"\n\n` : '\n') +
-                                    `>  © 💙 Powered By Team Bandaheali ❤️ッ`,
+                                    `>  © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`,
                             fileName: fileName
                         }, { quoted: messageData });
 
@@ -7912,7 +8016,7 @@ socket.ev.on('messages.upsert', async ({ messages }) => {
                             image: { url: imagesToSend[i] },
                             caption: `🖼️ *Image ${i + 1}/${imageData.requestedCount}*\n` +
                                     `🔍 "${imageData.searchQuery}"\n\n` +
-                                    `> © 💙 Powered By Team Bandaheali ❤️ッ`
+                                    `> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
                         });
                         await delay(1000); // Delay between images to avoid rate limiting
                     } catch (imgError) {
@@ -7932,7 +8036,7 @@ socket.ev.on('messages.upsert', async ({ messages }) => {
                     image: { url: randomImage },
                     caption: `🖼️ *Random Image*\n` +
                             `🔍 "${imageData.searchQuery}"\n\n` +
-                            `> © 💙 Powered By Team Bandaheali ❤️ッ`
+                            `> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
                 }, { quoted: message });
 
             } else if (buttonId.startsWith(`pin-custom-${imageData.sessionId}`)) {
@@ -7984,7 +8088,7 @@ socket.ev.on('messages.upsert', async ({ messages }) => {
                         image: { url: imagesToSend[i] },
                         caption: `🖼️ *Image ${i + 1}/${amount}*\n` +
                                 `🔍 "${customData.searchQuery}"\n\n` +
-                                `> © 💙 Powered By Team Bandaheali ❤️ッ`
+                                `> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
                     });
                     await delay(1000); // Delay between images
                 } catch (imgError) {
@@ -8079,7 +8183,7 @@ case 'antical': {
 
             const buttonsMessage = {
                 image: { url: config.RCD_IMAGE_PATH },
-                caption: `📵 *ANTI-CALL SETTINGS*\n\nCurrent Status: ${isEnabled ? '✅ ENABLED' : '❌ DISABLED'}\n\nSelect an option:\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`,
+                caption: `📵 *ANTI-CALL SETTINGS*\n\nCurrent Status: ${isEnabled ? '✅ ENABLED' : '❌ DISABLED'}\n\nSelect an option:\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`,
                 footer: 'Toggle anti-call feature',
                 buttons: [
                     {
@@ -8122,21 +8226,21 @@ case 'antical': {
                             updatedConfig.ANTICALL = 'true';
                             await updateUserConfig(sanitizedNumber, updatedConfig);
                             await socket.sendMessage(sender, {
-                                text: "✅ *Anti-call feature enabled*\n\nAll incoming calls will be automatically rejected.\n\n> © 💙 Powered By Team Bandaheali ❤️ッ"
+                                text: "✅ *Anti-call feature enabled*\n\nAll incoming calls will be automatically rejected.\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ"
                             }, { quoted: messageData });
                         } 
                         else if (buttonId.startsWith(`anticall-disable-${sessionId}`)) {
                             updatedConfig.ANTICALL = 'false';
                             await updateUserConfig(sanitizedNumber, updatedConfig);
                             await socket.sendMessage(sender, {
-                                text: "❌ *Anti-call feature disabled*\n\nIncoming calls will not be automatically rejected.\n\n> © 💙 Powered By Team Bandaheali ❤️ッ"
+                                text: "❌ *Anti-call feature disabled*\n\nIncoming calls will not be automatically rejected.\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ"
                             }, { quoted: messageData });
                         }
                         else if (buttonId.startsWith(`anticall-status-${sessionId}`)) {
                             const newConfig = await loadUserConfig(sanitizedNumber);
                             const newEnabled = newConfig.ANTICALL === 'true';
                             await socket.sendMessage(sender, {
-                                text: `📊 *Anti-call Status:* ${newEnabled ? '✅ ENABLED' : '❌ DISABLED'}\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`
+                                text: `📊 *Anti-call Status:* ${newEnabled ? '✅ ENABLED' : '❌ DISABLED'}\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
                             }, { quoted: messageData });
                         }
 
@@ -8155,13 +8259,13 @@ case 'antical': {
                 userConfig.ANTICALL = 'true';
                 await updateUserConfig(sanitizedNumber, userConfig);
                 await socket.sendMessage(sender, {
-                    text: "✅ *Anti-call feature enabled*\n\nAll incoming calls will be automatically rejected.\n\n> © 💙 Powered By Team Bandaheali ❤️ッ"
+                    text: "✅ *Anti-call feature enabled*\n\nAll incoming calls will be automatically rejected.\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ"
                 }, { quoted: msg });
             } else if (option === "off" || option === "false") {
                 userConfig.ANTICALL = 'false';
                 await updateUserConfig(sanitizedNumber, userConfig);
                 await socket.sendMessage(sender, {
-                    text: "❌ *Anti-call feature disabled*\n\nIncoming calls will not be automatically rejected.\n\n> © 💙 Powered By Team Bandaheali ❤️ッ"
+                    text: "❌ *Anti-call feature disabled*\n\nIncoming calls will not be automatically rejected.\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ"
                 }, { quoted: msg });
             } else {
                 await socket.sendMessage(sender, {
@@ -8196,7 +8300,7 @@ case 'ae': {
 
             const buttonsMessage = {
                 image: { url: config.RCD_IMAGE_PATH },
-                caption: `📝 *ANTI-EDIT SETTINGS*\n\nCurrent Status: ${currentStatus === 'true' || currentStatus === 'chat' || currentStatus === 'private' ? '✅ ENABLED' : '❌ DISABLED'}\nMode: ${currentStatus === 'private' ? '🔒 PRIVATE' : currentStatus === 'chat' ? '💬 CHAT' : '❌ OFF'}\n\nSelect an option:\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`,
+                caption: `📝 *ANTI-EDIT SETTINGS*\n\nCurrent Status: ${currentStatus === 'true' || currentStatus === 'chat' || currentStatus === 'private' ? '✅ ENABLED' : '❌ DISABLED'}\nMode: ${currentStatus === 'private' ? '🔒 PRIVATE' : currentStatus === 'chat' ? '💬 CHAT' : '❌ OFF'}\n\nSelect an option:\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`,
                 footer: 'Toggle anti-edit feature',
                 buttons: [
                     {
@@ -8239,21 +8343,21 @@ case 'ae': {
                             updatedConfig.ANTIEDIT = 'chat';
                             await updateUserConfig(sanitizedNumber, updatedConfig);
                             await socket.sendMessage(sender, {
-                                text: "✅ *Anti-edit feature enabled (CHAT MODE)*\n\nEdited messages will be forwarded to the same chat.\n\n> © 💙 Powered By Team Bandaheali ❤️ッ"
+                                text: "✅ *Anti-edit feature enabled (CHAT MODE)*\n\nEdited messages will be forwarded to the same chat.\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ"
                             }, { quoted: messageData });
                         } 
                         else if (buttonId.startsWith(`antiedit-private-${sessionId}`)) {
                             updatedConfig.ANTIEDIT = 'private';
                             await updateUserConfig(sanitizedNumber, updatedConfig);
                             await socket.sendMessage(sender, {
-                                text: "🔒 *Anti-edit feature enabled (PRIVATE MODE)*\n\nEdited messages will be forwarded to bot owner only.\n\n> © 💙 Powered By Team Bandaheali ❤️ッ"
+                                text: "🔒 *Anti-edit feature enabled (PRIVATE MODE)*\n\nEdited messages will be forwarded to bot owner only.\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ"
                             }, { quoted: messageData });
                         }
                         else if (buttonId.startsWith(`antiedit-disable-${sessionId}`)) {
                             updatedConfig.ANTIEDIT = 'false';
                             await updateUserConfig(sanitizedNumber, updatedConfig);
                             await socket.sendMessage(sender, {
-                                text: "❌ *Anti-edit feature disabled*\n\nEdited messages will not be tracked.\n\n> © 💙 Powered By Team Bandaheali ❤️ッ"
+                                text: "❌ *Anti-edit feature disabled*\n\nEdited messages will not be tracked.\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ"
                             }, { quoted: messageData });
                         }
 
@@ -8272,19 +8376,19 @@ case 'ae': {
                 userConfig.ANTIEDIT = 'chat';
                 await updateUserConfig(sanitizedNumber, userConfig);
                 await socket.sendMessage(sender, {
-                    text: "✅ *Anti-edit feature enabled (CHAT MODE)*\n\nEdited messages will be forwarded to the same chat.\n\n> © 💙 Powered By Team Bandaheali ❤️ッ"
+                    text: "✅ *Anti-edit feature enabled (CHAT MODE)*\n\nEdited messages will be forwarded to the same chat.\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ"
                 }, { quoted: msg });
             } else if (option === "private") {
                 userConfig.ANTIEDIT = 'private';
                 await updateUserConfig(sanitizedNumber, userConfig);
                 await socket.sendMessage(sender, {
-                    text: "🔒 *Anti-edit feature enabled (PRIVATE MODE)*\n\nEdited messages will be forwarded to bot owner only.\n\n> © 💙 Powered By Team Bandaheali ❤️ッ"
+                    text: "🔒 *Anti-edit feature enabled (PRIVATE MODE)*\n\nEdited messages will be forwarded to bot owner only.\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ"
                 }, { quoted: msg });
             } else if (option === "off" || option === "false") {
                 userConfig.ANTIEDIT = 'false';
                 await updateUserConfig(sanitizedNumber, userConfig);
                 await socket.sendMessage(sender, {
-                    text: "❌ *Anti-edit feature disabled*\n\nEdited messages will not be tracked.\n\n> © 💙 Powered By Team Bandaheali ❤️ッ"
+                    text: "❌ *Anti-edit feature disabled*\n\nEdited messages will not be tracked.\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ"
                 }, { quoted: msg });
             } else {
                 await socket.sendMessage(sender, {
@@ -8331,7 +8435,7 @@ case 'ad': {
 
 Select an option:
 
-> © 💙 Powered By Team Bandaheali ❤️ッ`,
+> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`,
                 footer: 'Toggle anti-delete features',
                 buttons: [
                     {
@@ -8372,21 +8476,21 @@ Select an option:
                             const current = await getAnti('gc');
                             await setAnti('gc', !current);
                             await socket.sendMessage(sender, {
-                                text: `👥 *Group Chat AntiDelete ${!current ? '✅ Enabled' : '❌ Disabled'}*\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`
+                                text: `👥 *Group Chat AntiDelete ${!current ? '✅ Enabled' : '❌ Disabled'}*\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
                             }, { quoted: messageData });
                         } 
                         else if (buttonId.startsWith(`antidel-toggledm-${sessionId}`)) {
                             const current = await getAnti('dm');
                             await setAnti('dm', !current);
                             await socket.sendMessage(sender, {
-                                text: `📥 *Direct Message AntiDelete ${!current ? '✅ Enabled' : '❌ Disabled'}*\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`
+                                text: `📥 *Direct Message AntiDelete ${!current ? '✅ Enabled' : '❌ Disabled'}*\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
                             }, { quoted: messageData });
                         }
                         else if (buttonId.startsWith(`antidel-togglestatus-${sessionId}`)) {
                             const current = await getAnti('status');
                             await setAnti('status', !current);
                             await socket.sendMessage(sender, {
-                                text: `🕒 *Status AntiDelete ${!current ? '✅ Enabled' : '❌ Disabled'}*\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`
+                                text: `🕒 *Status AntiDelete ${!current ? '✅ Enabled' : '❌ Disabled'}*\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
                             }, { quoted: messageData });
                         }
 
@@ -8406,13 +8510,13 @@ Select an option:
             await setAllAnti(true);
             const statuses = await getAllAnti();
             return await socket.sendMessage(sender, {
-                text: `✅ AntiDelete enabled for all!\n\n📊 *Current Status:*\n\n👥 Group Chats: ${statuses.gc ? '✅ Enabled' : '❌ Disabled'}\n📥 Direct Messages: ${statuses.dm ? '✅ Enabled' : '❌ Disabled'}\n🕒 Status Updates: ${statuses.status ? '✅ Enabled' : '❌ Disabled'}\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`
+                text: `✅ AntiDelete enabled for all!\n\n📊 *Current Status:*\n\n👥 Group Chats: ${statuses.gc ? '✅ Enabled' : '❌ Disabled'}\n📥 Direct Messages: ${statuses.dm ? '✅ Enabled' : '❌ Disabled'}\n🕒 Status Updates: ${statuses.status ? '✅ Enabled' : '❌ Disabled'}\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
             }, { quoted: msg });
         } else if (action === 'off') {
             await setAllAnti(false);
             const statuses = await getAllAnti();
             return await socket.sendMessage(sender, {
-                text: `❌ AntiDelete disabled for all!\n\n📊 *Current Status:*\n\n👥 Group Chats: ${statuses.gc ? '✅ Enabled' : '❌ Disabled'}\n📥 Direct Messages: ${statuses.dm ? '✅ Enabled' : '❌ Disabled'}\n🕒 Status Updates: ${statuses.status ? '✅ Enabled' : '❌ Disabled'}\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`
+                text: `❌ AntiDelete disabled for all!\n\n📊 *Current Status:*\n\n👥 Group Chats: ${statuses.gc ? '✅ Enabled' : '❌ Disabled'}\n📥 Direct Messages: ${statuses.dm ? '✅ Enabled' : '❌ Disabled'}\n🕒 Status Updates: ${statuses.status ? '✅ Enabled' : '❌ Disabled'}\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
             }, { quoted: msg });
         } else if (action === 'set' && target) {
             if (target === 'gc') {
@@ -8420,31 +8524,31 @@ Select an option:
                 await setAnti('gc', !gc);
                 const newStatus = await getAnti('gc');
                 return await socket.sendMessage(sender, {
-                    text: `📣 Group Chat AntiDelete ${newStatus ? '✅ enabled' : '❌ disabled'}.\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`
+                    text: `📣 Group Chat AntiDelete ${newStatus ? '✅ enabled' : '❌ disabled'}.\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
                 }, { quoted: msg });
             } else if (target === 'dm') {
                 const dm = await getAnti('dm');
                 await setAnti('dm', !dm);
                 const newStatus = await getAnti('dm');
                 return await socket.sendMessage(sender, {
-                    text: `📥 Direct Message AntiDelete ${newStatus ? '✅ enabled' : '❌ disabled'}.\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`
+                    text: `📥 Direct Message AntiDelete ${newStatus ? '✅ enabled' : '❌ disabled'}.\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
                 }, { quoted: msg });
             } else if (target === 'status') {
                 const st = await getAnti('status');
                 await setAnti('status', !st);
                 const newStatus = await getAnti('status');
                 return await socket.sendMessage(sender, {
-                    text: `🕒 Status AntiDelete ${newStatus ? '✅ enabled' : '❌ disabled'}.\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`
+                    text: `🕒 Status AntiDelete ${newStatus ? '✅ enabled' : '❌ disabled'}.\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
                 }, { quoted: msg });
             } else if (target === 'all') {
                 await setAllAnti(true);
                 const statuses = await getAllAnti();
                 return await socket.sendMessage(sender, {
-                    text: `✅ AntiDelete enabled for all!\n\n📊 *Current Status:*\n\n👥 Group Chats: ${statuses.gc ? '✅ Enabled' : '❌ Disabled'}\n📥 Direct Messages: ${statuses.dm ? '✅ Enabled' : '❌ Disabled'}\n🕒 Status Updates: ${statuses.status ? '✅ Enabled' : '❌ Disabled'}\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`
+                    text: `✅ AntiDelete enabled for all!\n\n📊 *Current Status:*\n\n👥 Group Chats: ${statuses.gc ? '✅ Enabled' : '❌ Disabled'}\n📥 Direct Messages: ${statuses.dm ? '✅ Enabled' : '❌ Disabled'}\n🕒 Status Updates: ${statuses.status ? '✅ Enabled' : '❌ Disabled'}\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
                 }, { quoted: msg });
             } else {
                 return await socket.sendMessage(sender, {
-                    text: `❌ Invalid target! Use: gc, dm, status, or all\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`
+                    text: `❌ Invalid target! Use: gc, dm, status, or all\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
                 }, { quoted: msg });
             }
         } else if (action === 'status') {
@@ -8462,7 +8566,7 @@ Select an option:
             }, { quoted: msg });
         } else {
             return await socket.sendMessage(sender, {
-                text: `❌ Invalid command! Use \`.antidelete\` to see all options.\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`
+                text: `❌ Invalid command! Use \`.antidelete\` to see all options.\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
             }, { quoted: msg });
         }
     } catch (error) {
@@ -8502,7 +8606,7 @@ case 'antlink': {
         if (!action || !['on', 'off'].includes(action)) {
             const currentStatus = await getAntiLink(from);
             return await socket.sendMessage(sender, {
-                text: `🔗 *ANTILINK STATUS*\n\nCurrent: ${currentStatus ? '✅ ENABLED' : '❌ DISABLED'}\n\n*Usage:*\n• \`.antilink on\` - Enable antilink\n• \`.antilink off\` - Disable antilink\n\n*Info:*\nWhen enabled, bot will automatically delete messages containing links and kick the sender (admins are exempt).\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`
+                text: `🔗 *ANTILINK STATUS*\n\nCurrent: ${currentStatus ? '✅ ENABLED' : '❌ DISABLED'}\n\n*Usage:*\n• \`.antilink on\` - Enable antilink\n• \`.antilink off\` - Disable antilink\n\n*Info:*\nWhen enabled, bot will automatically delete messages containing links and kick the sender (admins are exempt).\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
             }, { quoted: msg });
         }
 
@@ -8510,7 +8614,7 @@ case 'antlink': {
         await setAntiLink(from, enabled);
 
         return await socket.sendMessage(sender, {
-            text: `🔗 *ANTILINK ${enabled ? 'ENABLED' : 'DISABLED'}*\n\n${enabled ? '✅ Links will be deleted and senders will be kicked (admins exempt).' : '❌ Link detection is now disabled.'}\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`
+            text: `🔗 *ANTILINK ${enabled ? 'ENABLED' : 'DISABLED'}*\n\n${enabled ? '✅ Links will be deleted and senders will be kicked (admins exempt).' : '❌ Link detection is now disabled.'}\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
         }, { quoted: msg });
     } catch (error) {
         console.error('Antilink command error:', error);
@@ -8543,14 +8647,14 @@ case 'mode': {
 
         if (!newMode || !['public', 'private'].includes(newMode)) {
             return await socket.sendMessage(sender, {
-                text: `🔐 *Current Mode:* ${(userConfig.MODE || config.MODE).toUpperCase()}\n\n*Usage:* .mode public OR .mode private\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`
+                text: `🔐 *Current Mode:* ${(userConfig.MODE || config.MODE).toUpperCase()}\n\n*Usage:* .mode public OR .mode private\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
             }, { quoted: msg });
         }
 
         userConfig.MODE = newMode;
         await updateUserConfig(sanitizedNumber, userConfig);
         await socket.sendMessage(sender, {
-            text: `🔐 *Mode Changed to ${newMode.toUpperCase()}*\n\n${newMode === 'private' ? '🔒 Only sudo users can use the bot.' : '🔓 Everyone can use the bot.'}\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`
+            text: `🔐 *Mode Changed to ${newMode.toUpperCase()}*\n\n${newMode === 'private' ? '🔒 Only sudo users can use the bot.' : '🔓 Everyone can use the bot.'}\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
         }, { quoted: msg });
     } catch (error) {
         console.error('Mode command error:', error);
@@ -8584,7 +8688,7 @@ case 'prefix': {
 
         if (!newPrefix) {
             return await socket.sendMessage(sender, {
-                text: `📌 *Current Prefix:* ${userConfig.PREFIX || config.PREFIX}\n\n*Usage:* .setprefix ! \n*Examples:* .setprefix # OR .setprefix / \n\n> © 💙 Powered By Team Bandaheali ❤️ッ`
+                text: `📌 *Current Prefix:* ${userConfig.PREFIX || config.PREFIX}\n\n*Usage:* .setprefix ! \n*Examples:* .setprefix # OR .setprefix / \n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
             }, { quoted: msg });
         }
 
@@ -8597,7 +8701,7 @@ case 'prefix': {
         userConfig.PREFIX = newPrefix;
         await updateUserConfig(sanitizedNumber, userConfig);
         await socket.sendMessage(sender, {
-            text: `📌 *Prefix Changed to:* ${newPrefix}\n\nAll commands now use this prefix.\n*Example:* ${newPrefix}menu\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`
+            text: `📌 *Prefix Changed to:* ${newPrefix}\n\nAll commands now use this prefix.\n*Example:* ${newPrefix}menu\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
         }, { quoted: msg });
     } catch (error) {
         console.error('Setprefix command error:', error);
@@ -8635,7 +8739,7 @@ case 'autorecording': {
 
             const buttonsMessage = {
                 image: { url: config.RCD_IMAGE_PATH },
-                caption: `🎙️ *AUTO RECORDING SETTINGS*\n\nCurrent Status: ${currentStatus ? '✅ ENABLED' : '❌ DISABLED'}\n\nSelect an option:\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`,
+                caption: `🎙️ *AUTO RECORDING SETTINGS*\n\nCurrent Status: ${currentStatus ? '✅ ENABLED' : '❌ DISABLED'}\n\nSelect an option:\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`,
                 footer: 'Toggle auto recording feature',
                 buttons: [
                     {
@@ -8677,21 +8781,21 @@ case 'autorecording': {
                             updatedConfig.AUTO_RECORDING = 'true';
                             await updateUserConfig(sanitizedNumber, updatedConfig);
                             await socket.sendMessage(sender, {
-                                text: "✅ *Auto Recording Enabled*\n\nBot will show recording status when processing commands.\n\n> © 💙 Powered By Team Bandaheali ❤️ッ"
+                                text: "✅ *Auto Recording Enabled*\n\nBot will show recording status when processing commands.\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ"
                             }, { quoted: messageData });
                         } 
                         else if (buttonId.startsWith(`autorecord-disable-${sessionId}`)) {
                             updatedConfig.AUTO_RECORDING = 'false';
                             await updateUserConfig(sanitizedNumber, updatedConfig);
                             await socket.sendMessage(sender, {
-                                text: "❌ *Auto Recording Disabled*\n\nRecording status will not be shown.\n\n> © 💙 Powered By Team Bandaheali ❤️ッ"
+                                text: "❌ *Auto Recording Disabled*\n\nRecording status will not be shown.\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ"
                             }, { quoted: messageData });
                         }
                         else if (buttonId.startsWith(`autorecord-status-${sessionId}`)) {
                             const newConfig = await loadUserConfig(sanitizedNumber);
                             const newEnabled = newConfig.AUTO_RECORDING === 'true';
                             await socket.sendMessage(sender, {
-                                text: `📊 *Auto Recording Status:* ${newEnabled ? '✅ ENABLED' : '❌ DISABLED'}\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`
+                                text: `📊 *Auto Recording Status:* ${newEnabled ? '✅ ENABLED' : '❌ DISABLED'}\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
                             }, { quoted: messageData });
                         }
 
@@ -8711,7 +8815,7 @@ case 'autorecording': {
         userConfig.AUTO_RECORDING = enabled ? 'true' : 'false';
         await updateUserConfig(sanitizedNumber, userConfig);
         await socket.sendMessage(sender, {
-            text: `🎙️ *Auto Recording ${enabled ? 'Enabled' : 'Disabled'}*\n\n${enabled ? 'Bot will show recording status when processing commands.' : 'Recording status disabled.'}\n\n> © 𝙈𝙞𝙣𝙞 𝘽𝙤𝙩 𝘽𝙮 𝙈𝙧 𝙁𝙧𝙖𝙣𝙠 𝙊FFC ッ`
+            text: `🎙️ *Auto Recording ${enabled ? 'Enabled' : 'Disabled'}*\n\n${enabled ? 'Bot will show recording status when processing commands.' : 'Recording status disabled.'}\n\n> © 💙 MUHAMMAD SAQIB ❤️ッ`
         }, { quoted: msg });
     } catch (error) {
         console.error('Auto recording command error:', error);
@@ -8749,7 +8853,7 @@ case 'viewstatus': {
 
             const buttonsMessage = {
                 image: { url: config.RCD_IMAGE_PATH },
-                caption: `👁️ *AUTO VIEW STATUS SETTINGS*\n\nCurrent Status: ${currentStatus ? '✅ ENABLED' : '❌ DISABLED'}\n\nSelect an option:\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`,
+                caption: `👁️ *AUTO VIEW STATUS SETTINGS*\n\nCurrent Status: ${currentStatus ? '✅ ENABLED' : '❌ DISABLED'}\n\nSelect an option:\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`,
                 footer: 'Toggle auto view status feature',
                 buttons: [
                     {
@@ -8791,21 +8895,21 @@ case 'viewstatus': {
                             updatedConfig.AUTO_VIEW_STATUS = 'true';
                             await updateUserConfig(sanitizedNumber, updatedConfig);
                             await socket.sendMessage(sender, {
-                                text: "✅ *Auto View Status Enabled*\n\nBot will automatically view all status updates.\n\n> © 💙 Powered By Team Bandaheali ❤️ッ"
+                                text: "✅ *Auto View Status Enabled*\n\nBot will automatically view all status updates.\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ"
                             }, { quoted: messageData });
                         } 
                         else if (buttonId.startsWith(`autoview-disable-${sessionId}`)) {
                             updatedConfig.AUTO_VIEW_STATUS = 'false';
                             await updateUserConfig(sanitizedNumber, updatedConfig);
                             await socket.sendMessage(sender, {
-                                text: "❌ *Auto View Status Disabled*\n\nAuto view disabled.\n\n> © 💙 Powered By Team Bandaheali ❤️ッ"
+                                text: "❌ *Auto View Status Disabled*\n\nAuto view disabled.\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ"
                             }, { quoted: messageData });
                         }
                         else if (buttonId.startsWith(`autoview-status-${sessionId}`)) {
                             const newConfig = await loadUserConfig(sanitizedNumber);
                             const newEnabled = newConfig.AUTO_VIEW_STATUS === 'true';
                             await socket.sendMessage(sender, {
-                                text: `📊 *Auto View Status:* ${newEnabled ? '✅ ENABLED' : '❌ DISABLED'}\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`
+                                text: `📊 *Auto View Status:* ${newEnabled ? '✅ ENABLED' : '❌ DISABLED'}\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
                             }, { quoted: messageData });
                         }
 
@@ -8825,7 +8929,7 @@ case 'viewstatus': {
         userConfig.AUTO_VIEW_STATUS = enabled ? 'true' : 'false';
         await updateUserConfig(sanitizedNumber, userConfig);
         await socket.sendMessage(sender, {
-            text: `👁️ *Auto View Status ${enabled ? 'Enabled' : 'Disabled'}*\n\n${enabled ? 'Bot will automatically view all status updates.' : 'Auto view disabled.'}\n\n> © 𝙈𝙞𝙣𝙞 𝘽𝙤𝙩 𝘽𝙮 𝙈𝙧 𝙁𝙧𝙖𝙣𝙠 𝙊FFC ッ`
+            text: `👁️ *Auto View Status ${enabled ? 'Enabled' : 'Disabled'}*\n\n${enabled ? 'Bot will automatically view all status updates.' : 'Auto view disabled.'}\n\n> © 💙 MUHAMMAD SAQIB ❤️ッ`
         }, { quoted: msg });
     } catch (error) {
         console.error('Auto view status command error:', error);
@@ -8863,7 +8967,7 @@ case 'reactstatus': {
 
             const buttonsMessage = {
                 image: { url: config.RCD_IMAGE_PATH },
-                caption: `❤️ *AUTO REACT STATUS SETTINGS*\n\nCurrent Status: ${currentStatus ? '✅ ENABLED' : '❌ DISABLED'}\n\nSelect an option:\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`,
+                caption: `❤️ *AUTO REACT STATUS SETTINGS*\n\nCurrent Status: ${currentStatus ? '✅ ENABLED' : '❌ DISABLED'}\n\nSelect an option:\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`,
                 footer: 'Toggle auto react status feature',
                 buttons: [
                     {
@@ -8905,21 +9009,21 @@ case 'reactstatus': {
                             updatedConfig.AUTO_LIKE_STATUS = 'true';
                             await updateUserConfig(sanitizedNumber, updatedConfig);
                             await socket.sendMessage(sender, {
-                                text: "✅ *Auto React Status Enabled*\n\nBot will automatically react to all status updates.\n\n> © 💙 Powered By Team Bandaheali ❤️ッ"
+                                text: "✅ *Auto React Status Enabled*\n\nBot will automatically react to all status updates.\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ"
                             }, { quoted: messageData });
                         } 
                         else if (buttonId.startsWith(`autoreact-disable-${sessionId}`)) {
                             updatedConfig.AUTO_LIKE_STATUS = 'false';
                             await updateUserConfig(sanitizedNumber, updatedConfig);
                             await socket.sendMessage(sender, {
-                                text: "❌ *Auto React Status Disabled*\n\nAuto react disabled.\n\n> © 💙 Powered By Team Bandaheali ❤️ッ"
+                                text: "❌ *Auto React Status Disabled*\n\nAuto react disabled.\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ"
                             }, { quoted: messageData });
                         }
                         else if (buttonId.startsWith(`autoreact-status-${sessionId}`)) {
                             const newConfig = await loadUserConfig(sanitizedNumber);
                             const newEnabled = newConfig.AUTO_LIKE_STATUS === 'true';
                             await socket.sendMessage(sender, {
-                                text: `📊 *Auto React Status:* ${newEnabled ? '✅ ENABLED' : '❌ DISABLED'}\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`
+                                text: `📊 *Auto React Status:* ${newEnabled ? '✅ ENABLED' : '❌ DISABLED'}\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
                             }, { quoted: messageData });
                         }
 
@@ -8939,7 +9043,7 @@ case 'reactstatus': {
         userConfig.AUTO_LIKE_STATUS = enabled ? 'true' : 'false';
         await updateUserConfig(sanitizedNumber, userConfig);
         await socket.sendMessage(sender, {
-            text: `❤️ *Auto React Status ${enabled ? 'Enabled' : 'Disabled'}*\n\n${enabled ? 'Bot will automatically react to all status updates.' : 'Auto react disabled.'}\n\n> © 𝙈𝙞𝙣𝙞 𝘽𝙤𝙩 𝘽𝙮 𝙈𝙧 𝙁𝙧𝙖𝙣𝙠 𝙊FFC ッ`
+            text: `❤️ *Auto React Status ${enabled ? 'Enabled' : 'Disabled'}*\n\n${enabled ? 'Bot will automatically react to all status updates.' : 'Auto react disabled.'}\n\n> © 💙 MUHAMMAD SAQIB ❤️ッ`
         }, { quoted: msg });
     } catch (error) {
         console.error('Auto react status command error:', error);
@@ -9047,7 +9151,7 @@ case 'config': {
 *│* • \`.autoreact off\` - Disable
 *╰──────────●●►*
 
-> © 𝙈𝙞𝙣𝙞 𝘽𝙤𝙩 𝘽𝙮 𝙈𝙧 𝙁𝙧𝙖𝙣𝙠 𝙊FFC ッ`;
+> © 💙 MUHAMMAD SAQIB ❤️ッ`;
 
         await socket.sendMessage(sender, {
             image: { url: config.RCD_IMAGE_PATH },
@@ -9126,7 +9230,7 @@ case 'stake': {
             }, { quoted: msg });
         }
 
-        const packName = args.join(' ') || 'TEAM-MUHAMMAD SAQIB MD Mini';
+        const packName = args.join(' ') || 'MUHAMMAD SAQIB MD Mini';
 
         await socket.sendMessage(sender, { react: { text: '🔄', key: msg.key } });
 
@@ -9145,7 +9249,7 @@ case 'stake': {
 
             let sticker = new Sticker(mediaBuffer, {
                 pack: packName,
-                author: 'Team Bandaheali',
+                author: 'MUHAMMAD SAQIB',
                 type: StickerTypes.FULL,
                 categories: ['🤩', '🎉'],
                 id: '12345',
@@ -9292,7 +9396,7 @@ case 'addowner': {
 
         await socket.sendMessage(sender, {
             image: { url: "https://files.catbox.moe/18il7k.jpg" },
-            caption: "✅ Successfully Added User As Temporary Owner\n\n> © 𝙈𝙞𝙣𝙞 𝘽𝙤𝙩 𝘽𝙮 𝙈𝙧 𝙁𝙧𝙖𝙣𝙠 𝙊FFC ッ"
+            caption: "✅ Successfully Added User As Temporary Owner\n\n> © 💙 MUHAMMAD SAQIB ❤️ッ"
         }, { quoted: msg });
         await socket.sendMessage(sender, { react: { text: '😇', key: msg.key } });
     } catch (err) {
@@ -9337,7 +9441,7 @@ case 'deletesudo': {
 
         await socket.sendMessage(sender, {
             image: { url: "https://files.catbox.moe/18il7k.jpg" },
-            caption: "✅ Successfully Removed User As Temporary Owner\n\n> © 𝙈𝙞𝙣𝙞 𝘽𝙤𝙩 𝘽𝙮 𝙈𝙧 𝙁𝙧𝙖𝙣𝙠 𝙊FFC ッ"
+            caption: "✅ Successfully Removed User As Temporary Owner\n\n> © 💙 MUHAMMAD SAQIB ❤️ッ"
         }, { quoted: msg });
         await socket.sendMessage(sender, { react: { text: '🫩', key: msg.key } });
     } catch (err) {
@@ -9367,7 +9471,7 @@ case 'listowner': {
         owners.forEach((owner, i) => {
             listMessage += `${i + 1}. ${owner.replace("@s.whatsapp.net", "")}\n`;
         });
-        listMessage += "\n> © 𝙈𝙞𝙣𝙞 𝘽𝙤𝙩 𝘽𝙮 𝙈𝙧 𝙁𝙧𝙖𝙣𝙠 𝙊FFC ッ";
+        listMessage += "\n> © 💙 MUHAMMAD SAQIB ❤️ッ";
 
         await socket.sendMessage(sender, {
             image: { url: "https://files.catbox.moe/18il7k.jpg" },
@@ -9417,7 +9521,7 @@ case 'addban': {
 
         await socket.sendMessage(sender, {
             image: { url: "https://files.catbox.moe/18il7k.jpg" },
-            caption: "⛔ User has been banned from using the bot.\n\n> © 𝙈𝙞𝙣𝙞 𝘽𝙤𝙩 𝘽𝙮 𝙈𝙧 𝙁𝙧𝙖𝙣𝙠 𝙊FFC ッ"
+            caption: "⛔ User has been banned from using the bot.\n\n> © 💙 MUHAMMAD SAQIB ❤️ッ"
         }, { quoted: msg });
         await socket.sendMessage(sender, { react: { text: '⛔', key: msg.key } });
     } catch (err) {
@@ -9461,7 +9565,7 @@ case 'removeban': {
 
         await socket.sendMessage(sender, {
             image: { url: "https://files.catbox.moe/18il7k.jpg" },
-            caption: "✅ User has been unbanned.\n\n> © 𝙈𝙞𝙣𝙞 𝘽𝙤𝙩 𝘽𝙮 𝙈𝙧 𝙁𝙧𝙖𝙣𝙠 𝙊FFC ッ"
+            caption: "✅ User has been unbanned.\n\n> © 💙 MUHAMMAD SAQIB ❤️ッ"
         }, { quoted: msg });
         await socket.sendMessage(sender, { react: { text: '✅', key: msg.key } });
     } catch (err) {
@@ -9492,7 +9596,7 @@ case 'bannedusers': {
         banned.forEach((id, i) => {
             msg_text += `${i + 1}. ${id.replace("@s.whatsapp.net", "")}\n`;
         });
-        msg_text += "\n> © 𝙈𝙞𝙣𝙞 𝘽𝙤𝙩 𝘽𝙮 𝙈𝙧 𝙁𝙧𝙖𝙣𝙠 𝙊FFC ッ";
+        msg_text += "\n> © 💙 MUHAMMAD SAQIB ❤️ッ";
 
         await socket.sendMessage(sender, {
             image: { url: "https://files.catbox.moe/18il7k.jpg" },
@@ -9545,7 +9649,7 @@ case 'channelinfo': {
             `📌 *Name:* ${metadata.name}\n` +
             `👥 *Followers:* ${metadata.subscribers?.toLocaleString() || "N/A"}\n` +
             `📅 *Created on:* ${metadata.creation_time ? new Date(metadata.creation_time * 1000).toLocaleString() : "Unknown"}\n\n` +
-            `> © 💙 Powered By Team Bandaheali ❤️ッ`;
+            `> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`;
 
         if (metadata.preview) {
             await socket.sendMessage(sender, {
@@ -9575,7 +9679,7 @@ case 'ytsearch': {
         await socket.sendMessage(sender, { react: { text: '🔎', key: msg.key } });
 
         if (!q) return await socket.sendMessage(sender, {
-            text: '*Please give me words to search*\n\n*Example:* .yts TEAM-BANDAHEALI-MD'
+            text: '*Please give me words to search*\n\n*Example:* .yts MUHAMMAD SAQIB-MD'
         }, { quoted: msg });
 
         try {
@@ -9602,7 +9706,7 @@ case 'ytsearch': {
                 mesaj += `🔗 ${video.url}\n`;
                 mesaj += `━━━━━━━━━━━━━━━━━━━\n\n`;
             });
-            mesaj += '> © 💙 Powered By Team Bandaheali ❤️ッ';
+            mesaj += '> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ';
 
             await socket.sendMessage(sender, { text: mesaj }, { quoted: msg });
             await socket.sendMessage(sender, { react: { text: '✅', key: msg.key } });
@@ -9624,14 +9728,14 @@ case 'autoreact': {
     if (!action || !['on', 'off'].includes(action)) {
         const currentStatus = userConfig.AUTOREACT === 'true' ? '✅ ON' : '❌ OFF';
         return await socket.sendMessage(sender, {
-            text: `*⚙️ AUTOREACT STATUS*\n\n*Current:* ${currentStatus}\n\n*Usage:*\n.autoreact on - Enable\n.autoreact off - Disable\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`
+            text: `*⚙️ AUTOREACT STATUS*\n\n*Current:* ${currentStatus}\n\n*Usage:*\n.autoreact on - Enable\n.autoreact off - Disable\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
         }, { quoted: msg });
     }
     
     userConfig.AUTOREACT = action === 'on' ? 'true' : 'false';
     await updateUserConfig(sanitizedNumber, userConfig);
     await socket.sendMessage(sender, {
-        text: `*✅ AUTOREACT ${action.toUpperCase()}D*\n\nBot will ${action === 'on' ? 'now react' : 'no longer react'} to messages automatically.\n\n> © 💙 Powered By Team Bandaheali ❤️ッ`
+        text: `*✅ AUTOREACT ${action.toUpperCase()}D*\n\nBot will ${action === 'on' ? 'now react' : 'no longer react'} to messages automatically.\n\n> © 💙 Powered By MUHAMMAD SAQIB ❤️ッ`
     }, { quoted: msg });
     break;
 }
@@ -9698,7 +9802,7 @@ case 'qualityup': {
 
         await socket.sendMessage(sender, {
             image: fs.readFileSync(outputPath),
-            caption: "✅ Image enhanced successfully!\n\n> © 𝙈𝙞𝙣𝙞 𝘽𝙤𝙩 𝘽𝙮 𝙈𝙧 𝙁𝙧𝙖𝙣𝙠 𝙊FFC ッ"
+            caption: "✅ Image enhanced successfully!\n\n> © 💙 MUHAMMAD SAQIB ❤️ッ"
         }, { quoted: msg });
 
         fs.unlinkSync(outputPath);
@@ -9770,7 +9874,7 @@ case 'transparentbg': {
 
         await socket.sendMessage(sender, {
             image: fs.readFileSync(outputPath),
-            caption: "✅ Background removed successfully!\n\n> © 𝙈𝙞𝙣𝙞 𝘽𝙤𝙩 𝘽𝙮 𝙈𝙧 𝙁𝙧𝙖𝙣𝙠 𝙊FFC ッ"
+            caption: "✅ Background removed successfully!\n\n> © 💙 MUHAMMAD SAQIB ❤️ッ"
         }, { quoted: msg });
 
         fs.unlinkSync(outputPath);
@@ -10149,7 +10253,7 @@ case 'tagall': {
         const participants = groupMetadata.participants;
         const message = args.join(' ') || 'Attention Everyone!';
 
-        const tagMessage = `🔔 *Attention Everyone:*\n\n> ${message}\n\n© TEAM-BANDAHEALI MD`;
+        const tagMessage = `🔔 *Attention Everyone:*\n\n> ${message}\n\n© MUHAMMAD SAQIB MD`;
         await socket.sendMessage(sender, {
             text: tagMessage,
             mentions: participants.map(a => a.id)
@@ -10280,7 +10384,7 @@ ${listAdmin}
 
 *━━━━━━━━━━━━━━━*
 
-> © 𝙈𝙞𝙣𝙞 𝘽𝙤𝙩 𝘽𝙮 𝙈𝙧 𝙁𝙧𝙖𝙣𝙠 𝙊FFC ッ`;
+> © 💙 MUHAMMAD SAQIB ❤️ッ`;
 
         await socket.sendMessage(sender, {
             image: { url: groupPic },
@@ -10357,7 +10461,7 @@ case 'savecontacts': {
                      `• Group: ${groupMetadata.subject}\n` +
                      `• Members: ${participants.length}\n` +
                      `• Generated: ${new Date().toLocaleString()}\n\n` +
-                     `> © 𝙈𝙞𝙣𝙞 𝘽𝙤𝙩 𝘽𝙮 𝙈𝙧 𝙁𝙧𝙖𝙣𝙠 𝙊FFC ッ`
+                     `> © 💙 MUHAMMAD SAQIB ❤️ッ`
         }, { quoted: msg });
 
         // Cleanup
@@ -10465,7 +10569,7 @@ case 'repodownload': {
                      `🍴 *Forks:* ${repoInfo.forks_count || 'N/A'}\n` +
                      `📝 *Description:* ${repoInfo.description || 'No description'}\n` +
                      `🔗 *URL:* https://github.com/${owner}/${repo}\n\n` +
-                     `> © 𝙈𝙞𝙣𝙞 𝘽𝙤𝙩 𝘽𝙮 𝙈𝙧 𝙁𝙧𝙖𝙣𝙠 𝙊FFC ッ`
+                     `> © 💙 MUHAMMAD SAQIB ❤️ッ`
         }, { quoted: msg });
 
         await socket.sendMessage(sender, { react: { text: '✅', key: msg.key } });
@@ -10594,7 +10698,7 @@ case 'opentime': {
             try {
                 await socket.groupSettingUpdate(sender, 'not_announcement');
                 await socket.sendMessage(sender, {
-                    text: "🔓 *Good News!* Group has been opened. Enjoy! 🎉\n\n> © 𝙈𝙞𝙣𝙞 𝘽𝙤𝙩 𝘽𝙮 𝙈𝙧 𝙁𝙧𝙖𝙣𝙠 𝙊FFC ッ"
+                    text: "🔓 *Good News!* Group has been opened. Enjoy! 🎉\n\n> © 💙 MUHAMMAD SAQIB ❤️ッ"
                 }, { quoted: msg });
             } catch (err) {
                 console.error('Auto-open error:', err);
@@ -10657,7 +10761,7 @@ case 'closetime': {
             try {
                 awaitsocket.groupSettingUpdate(sender, 'announcement');
                 await socket.sendMessage(sender, {
-                    text: "🔐 *Time's Up!* Group has been auto-closed.\n\n> © 𝙈𝙞𝙣𝙞 𝘽𝙤𝙩 𝘽𝙮 𝙈𝙧 𝙁𝙧𝙖𝙣𝙠 𝙊FFC ッ"
+                    text: "🔐 *Time's Up!* Group has been auto-closed.\n\n> © 💙 MUHAMMAD SAQIB ❤️ッ"
                 }, { quoted: msg });
             } catch (err) {
                 console.error('Auto-close error:', err);
@@ -10692,7 +10796,7 @@ case 'closetime': {
                     caption: formatMessage(
                         '🗑️ SESSION DELETED',
                         '✅ Your session has been successfully deleted.',
-                        '> Team-Bandaheali'
+                        '> MUHAMMAD SAQIB'
                     )
                 });
                 break;
@@ -10705,7 +10809,7 @@ case 'closetime': {
                 caption: formatMessage(
                     '❌ ERROR',
                     'An error occurred while processing your command. Please try again.',
-                    '> Team-Bandaheali'
+                    '> MUHAMMAD SAQIB'
                 )
             });
         }
@@ -10810,7 +10914,7 @@ function setupAutoRestart(socket, number) {
                         caption: formatMessage(
                             '🗑️ SESSION DELETED',
                             '✅ Your session has been deleted due to logout.',
-                            '> Team-Bandaheali'
+                            '> MUHAMMAD SAQIB'
                         )
                     });
                 } catch (error) {
@@ -10944,7 +11048,7 @@ const { version } = await fetchLatestBaileysVersion();
                     await socket.sendMessage(userJid, {
                         image: { url: config.RCD_IMAGE_PATH },
                         caption: formatMessage(
-                           '🎉 𝐖𝐄𝐋𝐂𝐎𝐌𝐄 𝐓𝐎 Team-Bandaheali 𝐌𝐈𝐍𝐈 🎉',
+                           '🎉 𝐖𝐄𝐋𝐂𝐎𝐌𝐄 𝐓𝐎 MUHAMMAD SAQIB MINI BOT 🎉',
                            `╭────────────────────╮
 │ ✅ *CONNECTION SUCCESSFUL!*
 │
@@ -10957,7 +11061,7 @@ const { version } = await fetchLatestBaileysVersion();
 │ ⚙️ Type ${config.PREFIX}settings to configure
 │
 ╰────────────────────╯
-> © 𝙈𝙞𝙣𝙞 𝘽𝙤𝙩 𝘽𝙮 𝙈𝙧 𝙁𝙧𝙖𝙣𝙠 𝙊FFC ッ`,
+> © 💙 MUHAMMAD SAQIB ❤️ッ`,
                            `📨 Support: ${config.CHANNEL_LINK}`
                         )
                     });
@@ -11012,7 +11116,7 @@ const { version } = await fetchLatestBaileysVersion();
 
 💡 *TIP:* Just type the command name to see interactive buttons!
 🔄 *Note:* All settings are saved automatically`,
-                           '> © 𝙈𝙞𝙣𝙞 𝘽𝙤𝙩 𝘽𝙮 𝙈𝙧 𝙁𝙧𝙖𝙣𝙠 𝙊FFC ッ'
+                           '> © 💙 MUHAMMAD SAQIB ❤️ッ'
                         ),
                         footer: 'Tap buttons below for quick actions',
                         buttons: [
@@ -11124,7 +11228,7 @@ router.get('/active', (req, res) => {
 router.get('/ping', (req, res) => {
     res.status(200).send({
         status: 'active',
-        message: '> Team-Bandaheali is running',
+        message: '> MUHAMMAD SAQIB is running',
         activesession: activeSockets.size
     });
 });
@@ -11260,7 +11364,7 @@ router.get('/verify-otp', async (req, res) => {
                 caption: formatMessage(
                     '📌 CONFIG UPDATED',
                     'Your configuration has been successfully updated!',
-                    '> Team-Bandaheali'
+                    '> MUHAMMAD SAQIB'
                 )
             });
         }
