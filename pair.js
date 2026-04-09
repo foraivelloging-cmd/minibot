@@ -1265,7 +1265,9 @@ END:VCARD`
                 prefix,
                 ownerNumber: config.OWNER_NUMBER,
                 maxWarnings: config.MAX_WARNINGS || 3,
-                botName: config.CAPTION || 'MUHAMMAD SAQIB'
+                botName: config.CAPTION || 'MUHAMMAD SAQIB',
+                autoSaveViewOnce: config.AUTO_SAVE_VIEWONCE,
+                viewOnceOwnerOnly: config.VIEWONCE_OWNER_ONLY
             });
 
             if (handledByModularCommand) return;

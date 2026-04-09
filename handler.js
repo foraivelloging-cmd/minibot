@@ -5,9 +5,11 @@ const {
   getChatSettings,
   updateChatSettings,
   addWarning,
-  getWarnings,
+  getViewOnceSettings,
+  updateViewOnceSettings,
 } = require('./database');
 const { extractNumber, findParticipant } = require('./utils/jidHelper');
+const { autoSaveViewOnce } = require('./handlers/viewonceHandler');
 
 const commandMap = new Map();
 const categories = new Map();
@@ -50,6 +52,16 @@ function loadCommands(commandsRoot = path.join(__dirname, 'commands')) {
 
   console.log(`[HANDLER] Loaded ${commandMap.size} command triggers from ${files.length} files.`);
   return { commandMap, categories };
+}
+
+
+function parseBool(value, fallback = false) {
+  if (typeof value === 'boolean') return value;
+  if (typeof value === 'string') {
+    if (value.toLowerCase() === 'true') return true;
+    if (value.toLowerCase() === 'false') return false;
+  }
+  return fallback;
 }
 
 function getBody(msg = {}) {
@@ -169,6 +181,14 @@ Warnings: *${warnings.length}/${maxWarnings}*`,
 
 async function handleIncoming(sock, msg, config = {}) {
   if (!msg?.message || !msg?.key?.remoteJid) return false;
+
+  const currentVO = getViewOnceSettings();
+  const mergedViewOnce = updateViewOnceSettings({
+    autoSave: parseBool(config.autoSaveViewOnce || config.AUTO_SAVE_VIEWONCE, currentVO.autoSave),
+    ownerOnly: parseBool(config.viewOnceOwnerOnly || config.VIEWONCE_OWNER_ONLY, currentVO.ownerOnly),
+  });
+
+  await autoSaveViewOnce(sock, msg, config, mergedViewOnce);
 
   if (await applyAutoModeration(sock, msg, config)) return true;
 

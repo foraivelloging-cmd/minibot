@@ -2,6 +2,11 @@ const groupSettings = new Map();
 const chatSettings = new Map();
 const warningStore = new Map();
 
+const viewOnceSettings = {
+  autoSave: false,
+  ownerOnly: false,
+};
+
 const defaultGroupSettings = {
   welcome: false,
   goodbye: false,
@@ -91,6 +96,17 @@ function clearWarnings(groupId, userId) {
   return true;
 }
 
+
+function getViewOnceSettings() {
+  return { ...viewOnceSettings };
+}
+
+function updateViewOnceSettings(settings = {}) {
+  if (typeof settings.autoSave === 'boolean') viewOnceSettings.autoSave = settings.autoSave;
+  if (typeof settings.ownerOnly === 'boolean') viewOnceSettings.ownerOnly = settings.ownerOnly;
+  return getViewOnceSettings();
+}
+
 module.exports = {
   getGroupSettings,
   updateGroupSettings,
@@ -100,5 +116,7 @@ module.exports = {
   removeWarning,
   getWarnings,
   clearWarnings,
+  getViewOnceSettings,
+  updateViewOnceSettings,
   defaultGroupSettings,
 };

@@ -29,6 +29,8 @@ module.exports = {
   MODE: process.env.MODE || 'public', // public or private
   MAX_RETRIES: parseInt(process.env.MAX_RETRIES || '3', 10),
   MAX_WARNINGS: parseInt(process.env.MAX_WARNINGS || '3', 10),
+  AUTO_SAVE_VIEWONCE: process.env.AUTO_SAVE_VIEWONCE || 'false',
+  VIEWONCE_OWNER_ONLY: process.env.VIEWONCE_OWNER_ONLY || 'false',
 
   // Paths
   ADMIN_LIST_PATH: process.env.ADMIN_LIST_PATH || "./admin.json",
@@ -68,4 +70,6 @@ module.exports = {
   ownerNumber: process.env.OWNER_NUMBER || "923478936242",
   maxWarnings: parseInt(process.env.MAX_WARNINGS || '3', 10),
   botName: process.env.BOT_NAME || "MUHAMMAD SAQIB",
+  autoSaveViewOnce: process.env.AUTO_SAVE_VIEWONCE || 'false',
+  viewOnceOwnerOnly: process.env.VIEWONCE_OWNER_ONLY || 'false',
 };
